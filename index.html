@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+  <meta name="description" content="ANAVANDI CONNECT — Multilingual, multimodal, accessibility-first public transportation assistant for Kerala. Speak it. Type it. Scan it."/>
+  <title>ANAVANDI CONNECT — Connect. Understand. Travel.</title>
+
+  <!-- Favicon using official Aanavandi Emblem -->
+  <link rel="icon" type="image/png" href="/assets/logo.png"/>
+  <link rel="apple-touch-icon" href="/assets/logo.png"/>
+
+  <!-- Typography & Google Fonts: Poppins & Indic Scripts for Maximum Readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Noto+Sans+Malayalam:wght@400;600;700;800;900&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;600;700&family=Noto+Sans+Kannada:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
+
+  <!-- Tailwind CSS via CDN with High-Contrast Red / Black / Light Yellow Palette -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            // High-Contrast Red, Black & Light Yellow Palette (No low-contrast green)
+            "brand-red": "#DC2626",            // KSRTC Vibrant Bus Red (Primary CTAs & Highlights)
+            "brand-red-dark": "#B91C1C",       // Darker Red for Hover
+            "brand-black": "#111827",          // Jet Black for Headings, Navigation & Primary Text
+            "brand-charcoal": "#1F2937",       // Deep Charcoal for Subtext
+            "brand-muted": "#4B5563",          // Muted Charcoal for Secondary Labels
+            
+            "brand-yellow": "#FACC15",         // Bold Aanavandi Sun Gold
+            "brand-yellow-light": "#FEF08A",   // Soft Light Yellow
+            "brand-yellow-cream": "#FFFBEB",   // Warm Yellow/Cream for Cards & Sections
+            
+            "surface-bg": "#FFFDF0",           // Warm Light Cream Canvas Background
+            "surface-card": "#FFFFFF",         // Crisp Pure White Cards
+            "surface-subtle": "#F9FAFB",
+            "border-ui": "#E5E7EB",            // Crisp Border
+            "border-yellow": "#FDE047"
+          },
+          fontFamily: {
+            sans: ["'Poppins'", "'Noto Sans Malayalam'", "'Noto Sans Devanagari'", "sans-serif"]
+          },
+          boxShadow: {
+            "card-clean": "0 4px 16px rgba(17, 24, 39, 0.06), 0 1px 3px rgba(17, 24, 39, 0.04)",
+            "btn-red": "0 4px 14px rgba(220, 38, 38, 0.30)",
+            "btn-black": "0 4px 14px rgba(17, 24, 39, 0.20)",
+            "modal-pop": "0 20px 40px -10px rgba(17, 24, 39, 0.25)"
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    @layer base {
+      html, body {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: #FFFDF0; /* Light Warm Cream */
+        color: #111827;            /* Jet Black Text for 100% Crisp Legibility */
+        font-family: 'Poppins', 'Noto Sans Malayalam', sans-serif;
+        -webkit-tap-highlight-color: transparent;
+      }
+      body {
+        overscroll-behavior-y: none;
+      }
+      .pb-safe {
+        padding-bottom: max(env(safe-area-inset-bottom, 0px), 16px);
+      }
+      .pt-safe {
+        padding-top: max(env(safe-area-inset-top, 0px), 8px);
+      }
+    }
+
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    * {
+      scrollbar-width: none;
+    }
+
+    /* Laser Scanner Line in KSRTC Red */
+    @keyframes scanLine {
+      0% { top: 6%; }
+      50% { top: 90%; }
+      100% { top: 6%; }
+    }
+    .scanner-laser {
+      animation: scanLine 2s ease-in-out infinite;
+    }
+
+    /* Waveform Animation */
+    @keyframes wavePulse {
+      0%, 100% { height: 8px; }
+      50% { height: 36px; }
+    }
+    .wave-bar {
+      animation: wavePulse 1.2s ease-in-out infinite;
+    }
+    .wave-bar:nth-child(2) { animation-delay: 0.15s; }
+    .wave-bar:nth-child(3) { animation-delay: 0.3s; }
+    .wave-bar:nth-child(4) { animation-delay: 0.45s; }
+    .wave-bar:nth-child(5) { animation-delay: 0.6s; }
+
+    /* Accessibility CSS Modifiers */
+    body.persona-senior, body.mode-large-text {
+      font-size: 112%;
+    }
+    body.mode-high-contrast {
+      background-color: #000000 !important;
+      color: #FFFFFF !important;
+    }
+    body.mode-high-contrast .bg-white,
+    body.mode-high-contrast .bg-surface-card {
+      background-color: #111827 !important;
+      color: #FFFFFF !important;
+      border: 2px solid #FACC15 !important;
+    }
+  </style>
+</head>
+<body class="bg-[#FFFDF0] text-[#111827] antialiased flex flex-col min-h-screen">
+
+
+
+  <!-- ==================== API KEY & AI MODEL CONFIGURATION MODAL ==================== -->
+  <div id="api-key-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-200">
+    <div class="relative w-full max-w-lg bg-white rounded-3xl p-6 sm:p-8 shadow-modal-pop border-2 border-[#111827] flex flex-col gap-5 animate-scale-in max-h-[92vh] overflow-y-auto">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-[#E5E7EB]">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full overflow-hidden bg-[#FFFBEB] p-2 border-2 border-[#111827] flex items-center justify-center text-[#DC2626]">
+            <span class="material-symbols-outlined text-[26px]">smart_toy</span>
+          </div>
+          <div>
+            <h2 class="text-xl font-black text-[#111827] tracking-tight">AI Model & API Key</h2>
+            <p class="text-xs text-[#DC2626] font-bold">Gemini AI മോഡൽ & API കീ കോൺഫിഗറേഷൻ</p>
+          </div>
+        </div>
+        <button type="button" class="w-8 h-8 rounded-full bg-[#F3F4F6] hover:bg-[#E5E7EB] text-[#111827] flex items-center justify-center font-bold text-sm" onclick="window.anavandiApp.closeApiKeyModal()">✕</button>
+      </div>
+
+      <!-- Overview Info -->
+      <p class="text-xs text-[#4B5563] font-medium leading-relaxed">
+        Connect Google Gemini to power real-time multilingual Indic natural language routing, OCR intelligence, and voice reassurance.
+      </p>
+
+      <!-- 1. AI Model Selection -->
+      <div class="flex flex-col gap-2">
+        <label class="text-xs font-black text-[#111827] uppercase tracking-wide flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-[16px] text-[#DC2626]">psychology</span>
+          Select AI Model (മോഡൽ)
+        </label>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" id="model-selection-grid">
+          <!-- Model 1: Gemini 1.5 Flash (Recommended) -->
+          <button type="button" class="api-model-card p-3 rounded-2xl bg-white border-2 border-[#111827] ring-2 ring-[#DC2626] text-left flex flex-col gap-1 transition-all" data-model="gemini-1.5-flash" onclick="window.anavandiApp.selectModel('gemini-1.5-flash')">
+            <div class="flex items-center justify-between">
+              <span class="font-extrabold text-xs text-[#111827]">Gemini 1.5 Flash</span>
+              <span class="px-2 py-0.5 rounded-full bg-[#DC2626] text-white text-[9px] font-black uppercase">Recommended</span>
+            </div>
+            <span class="text-[10px] text-[#4B5563] font-medium">Ultra-fast Indic multilingual reasoning</span>
+          </button>
+
+          <!-- Model 2: Gemini 2.0 Flash -->
+          <button type="button" class="api-model-card p-3 rounded-2xl bg-[#FFFBEB] border-2 border-[#FDE047] text-left flex flex-col gap-1 transition-all" data-model="gemini-2.0-flash" onclick="window.anavandiApp.selectModel('gemini-2.0-flash')">
+            <div class="flex items-center justify-between">
+              <span class="font-extrabold text-xs text-[#111827]">Gemini 2.0 Flash</span>
+              <span class="px-2 py-0.5 rounded-full bg-[#111827] text-white text-[9px] font-black">Next-Gen</span>
+            </div>
+            <span class="text-[10px] text-[#4B5563] font-medium">High-speed multimodal intelligence</span>
+          </button>
+
+          <!-- Model 3: Gemini 1.5 Pro -->
+          <button type="button" class="api-model-card p-3 rounded-2xl bg-[#FFFBEB] border-2 border-[#FDE047] text-left flex flex-col gap-1 transition-all" data-model="gemini-1.5-pro" onclick="window.anavandiApp.selectModel('gemini-1.5-pro')">
+            <div class="flex items-center justify-between">
+              <span class="font-extrabold text-xs text-[#111827]">Gemini 1.5 Pro</span>
+              <span class="px-2 py-0.5 rounded-full bg-[#FEF08A] text-[#111827] text-[9px] font-black">Pro</span>
+            </div>
+            <span class="text-[10px] text-[#4B5563] font-medium">Deep reasoning & complex queries</span>
+          </button>
+
+          <!-- Model 4: Built-in Offline Engine -->
+          <button type="button" class="api-model-card p-3 rounded-2xl bg-[#FFFBEB] border-2 border-[#FDE047] text-left flex flex-col gap-1 transition-all" data-model="local-deterministic" onclick="window.anavandiApp.selectModel('local-deterministic')">
+            <div class="flex items-center justify-between">
+              <span class="font-extrabold text-xs text-[#111827]">Local Engine</span>
+              <span class="px-2 py-0.5 rounded-full bg-[#111827] text-white text-[9px] font-black">Offline</span>
+            </div>
+            <span class="text-[10px] text-[#4B5563] font-medium">Zero-latency built-in transit rule engine</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 2. API Key Input -->
+      <div class="flex flex-col gap-2">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-black text-[#111827] uppercase tracking-wide flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px] text-[#DC2626]">key</span>
+            Google Gemini API Key
+          </label>
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="text-[11px] font-bold text-[#DC2626] hover:underline flex items-center gap-0.5">
+            <span>Get Free Key</span>
+            <span class="material-symbols-outlined text-[13px]">open_in_new</span>
+          </a>
+        </div>
+
+        <div class="relative">
+          <input id="modal-api-key-input" type="password" placeholder="AIzaSy..." class="w-full px-4 py-3 rounded-xl bg-[#FFFBEB] border-2 border-[#111827] text-xs font-mono font-bold text-[#111827] focus:outline-none focus:ring-2 focus:ring-[#DC2626] pr-20"/>
+          <button id="toggle-key-visibility-btn" type="button" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-bold text-[#4B5563] hover:text-[#111827] px-2 py-1 bg-white rounded-lg border border-[#E5E7EB]" onclick="window.anavandiApp.toggleApiKeyVisibility()">
+            Show
+          </button>
+        </div>
+        <p class="text-[11px] text-[#4B5563] font-medium">
+          🔒 Your API key is stored only in your local browser storage and never sent to external servers.
+        </p>
+      </div>
+
+      <!-- 3. Connection Test Result Banner -->
+      <div id="api-test-status-box" class="hidden p-3 rounded-xl text-xs font-bold flex items-center gap-2"></div>
+
+      <!-- 4. Modal Action Buttons -->
+      <div class="flex flex-col sm:flex-row gap-2 pt-2 border-t border-[#E5E7EB]">
+        <button id="test-api-key-btn" type="button" class="flex-1 py-3 px-4 rounded-xl bg-[#FFFBEB] hover:bg-[#FEF08A] text-[#111827] border-2 border-[#111827] font-black text-xs tracking-wide transition-all flex items-center justify-center gap-1.5" onclick="window.anavandiApp.testApiKeyConnection()">
+          <span class="material-symbols-outlined text-[16px] text-[#DC2626]">bolt</span>
+          <span>Test Connection</span>
+        </button>
+        <button id="save-api-key-btn" type="button" class="flex-1 py-3 px-4 rounded-xl bg-[#DC2626] hover:bg-[#B91C1C] text-white font-black text-xs tracking-wide shadow-btn-red active:scale-98 transition-all flex items-center justify-center gap-1.5" onclick="window.anavandiApp.saveApiKeyAndModel()">
+          <span class="material-symbols-outlined text-[16px]">save</span>
+          <span>Save & Apply</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TOP NAVIGATION BAR ==================== -->
+  <header class="fixed top-0 left-0 right-0 z-40 bg-[#FFFDF0]/95 backdrop-blur-md border-b border-[#E5E7EB] shadow-sm">
+    <!-- Quick Hackathon Bar -->
+    <div id="hackathon-demo-strip" class="bg-[#111827] text-white py-1.5 px-4 text-xs font-semibold flex items-center justify-between overflow-x-auto border-b border-[#FACC15]">
+      <div class="flex items-center gap-2 shrink-0">
+        <span class="inline-block w-2.5 h-2.5 rounded-full bg-[#FACC15] animate-pulse"></span>
+        <span class="font-bold tracking-wide text-[#FEF08A]">🏆 LIVE DEMO CONTROLS:</span>
+      </div>
+      <div class="flex items-center gap-1.5 shrink-0 overflow-x-auto">
+        <button type="button" class="px-2.5 py-0.5 rounded bg-[#1F2937] hover:bg-[#DC2626] text-white transition-colors text-[11px] font-bold border border-white/20 active:scale-95" onclick="window.anavandiApp.runDemoStep(1)">1. Home</button>
+        <button type="button" class="px-2.5 py-0.5 rounded bg-[#1F2937] hover:bg-[#DC2626] text-white transition-colors text-[11px] font-bold border border-white/20 active:scale-95" onclick="window.anavandiApp.runDemoStep(2)">2. Speak</button>
+        <button type="button" class="px-2.5 py-0.5 rounded bg-[#1F2937] hover:bg-[#DC2626] text-white transition-colors text-[11px] font-bold border border-white/20 active:scale-95" onclick="window.anavandiApp.runDemoStep(3)">3. Type</button>
+        <button type="button" class="px-2.5 py-0.5 rounded bg-[#1F2937] hover:bg-[#DC2626] text-white transition-colors text-[11px] font-bold border border-white/20 active:scale-95" onclick="window.anavandiApp.runDemoStep(4)">4. RouteLens</button>
+        <button type="button" class="px-2.5 py-0.5 rounded bg-[#1F2937] hover:bg-[#DC2626] text-white transition-colors text-[11px] font-bold border border-white/20 active:scale-95" onclick="window.anavandiApp.runDemoStep(5)">5. Journey</button>
+        <button type="button" class="px-2.5 py-0.5 rounded bg-[#DC2626] text-white hover:bg-[#B91C1C] transition-colors text-[11px] font-black shadow-sm flex items-center gap-1" onclick="window.anavandiApp.openAiAssistant()">🤖 AI Assistant</button>
+        <button type="button" class="px-2.5 py-0.5 rounded bg-[#1F2937] text-white hover:bg-[#DC2626] transition-colors text-[11px] font-black border border-white/20 shadow-sm" onclick="window.anavandiApp.openApiKeyModal()">🔑 API Key</button>
+        <a href="#showcase" data-nav-target="showcase" class="px-2.5 py-0.5 rounded bg-[#FACC15] text-[#111827] hover:bg-white transition-colors text-[11px] font-extrabold shadow-sm">📋 Mockup Grid</a>
+        <button type="button" class="px-3 py-0.5 rounded bg-[#DC2626] hover:bg-[#B91C1C] text-white font-black text-[11px] shadow-sm ml-1 active:scale-95" onclick="window.anavandiApp.runFullDemoAuto()">▶ Run All</button>
+      </div>
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3">
+      <!-- Left: Brand Logo & Title in Bold Black & Red -->
+      <a href="#home" data-nav-target="home" class="flex items-center gap-2.5 group select-none">
+        <div class="relative w-11 h-11 shrink-0 rounded-full overflow-hidden bg-white p-0.5 shadow-sm border-2 border-[#111827] group-hover:scale-105 transition-transform">
+          <img src="/assets/logo.png" alt="Aanavandi Official Emblem" class="w-full h-full object-contain rounded-full"/>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-1.5">
+            <span class="font-black text-base tracking-tight text-[#111827]">ANAVANDI</span>
+            <span class="font-black text-base tracking-tight text-[#DC2626]">CONNECT</span>
+          </div>
+          <span class="text-[10px] text-[#4B5563] font-bold leading-none">Connect. Understand. Travel.</span>
+        </div>
+      </a>
+
+      <!-- Center: Navigation Pill Tabs in Black & Red -->
+      <nav class="hidden lg:flex items-center gap-1.5" id="main-desktop-nav">
+        <a href="#home" data-nav-target="home" class="nav-pill-item px-4 py-1.5 rounded-full text-xs font-bold bg-[#111827] text-white shadow-sm transition-all">Home</a>
+        <a href="#plan" data-nav-target="plan" class="nav-pill-item px-3.5 py-1.5 rounded-full text-xs font-bold text-[#111827] hover:bg-[#FEF08A] transition-all">Plan Journey</a>
+        <a href="#routelens" data-nav-target="routelens" class="nav-pill-item px-3.5 py-1.5 rounded-full text-xs font-bold text-[#111827] hover:bg-[#FEF08A] transition-all">Scan Board</a>
+        <a href="#nearby" data-nav-target="nearby" class="nav-pill-item px-3.5 py-1.5 rounded-full text-xs font-bold text-[#111827] hover:bg-[#FEF08A] transition-all">Nearby Stops</a>
+        <a href="#journey" data-nav-target="journey" class="nav-pill-item px-3.5 py-1.5 rounded-full text-xs font-bold text-[#111827] hover:bg-[#FEF08A] transition-all">My Journey</a>
+        <button type="button" class="nav-pill-item flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-black text-white bg-[#DC2626] hover:bg-[#B91C1C] shadow-btn-red transition-all cursor-pointer" onclick="window.anavandiApp.openAiAssistant()" title="Ask Aanavandi AI">
+          <span class="material-symbols-outlined text-[15px]">smart_toy</span>
+          <span>AI Assistant</span>
+        </button>
+        <a href="#help" data-nav-target="help" class="nav-pill-item px-3 py-1.5 rounded-full text-xs font-bold text-[#111827] hover:bg-[#FEF08A] transition-all">Help</a>
+      </nav>
+
+      <!-- Right Controls: Change Traveler Type, Language, Online Status -->
+      <div class="flex items-center gap-2">
+        <!-- API Key Status Button -->
+        <button id="header-api-btn" type="button" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FFFBEB] hover:bg-[#FEF08A] text-xs font-black text-[#111827] border border-[#111827] shadow-sm transition-all cursor-pointer" onclick="window.anavandiApp.openApiKeyModal()" title="Configure AI Model & API Key">
+          <span class="material-symbols-outlined text-[16px] text-[#DC2626]">settings_suggest</span>
+          <span id="header-api-model-label">Gemini AI</span>
+        </button>
+
+
+
+        <!-- Language Selector Dropdown -->
+        <div class="relative">
+          <button id="lang-selector-btn" type="button" aria-label="Change Language" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white hover:bg-[#FEF08A] text-xs font-bold text-[#111827] transition-colors shadow-sm border border-[#E5E7EB]">
+            <span id="current-lang-label">മലയാളം</span>
+            <span class="material-symbols-outlined text-[16px] text-[#4B5563]">expand_more</span>
+          </button>
+          <div id="lang-dropdown-menu" class="hidden absolute right-0 mt-1.5 w-44 bg-white border-2 border-[#111827] rounded-2xl shadow-card-clean z-50 p-1.5 flex flex-col gap-1">
+            <button type="button" class="lang-option-btn w-full px-3 py-2 rounded-xl text-left text-xs font-bold flex items-center justify-between hover:bg-[#FEF08A] text-[#111827] transition-colors" data-lang="ml">
+              <span>🌴 മലയാളം</span>
+              <span class="text-[10px] text-[#6B7280] font-mono">ML</span>
+            </button>
+            <button type="button" class="lang-option-btn w-full px-3 py-2 rounded-xl text-left text-xs font-bold flex items-center justify-between hover:bg-[#FEF08A] text-[#111827] transition-colors" data-lang="en">
+              <span>🌐 English</span>
+              <span class="text-[10px] text-[#6B7280] font-mono">EN</span>
+            </button>
+            <button type="button" class="lang-option-btn w-full px-3 py-2 rounded-xl text-left text-xs font-bold flex items-center justify-between hover:bg-[#FEF08A] text-[#111827] transition-colors" data-lang="hi">
+              <span>🇮🇳 हिन्दी</span>
+              <span class="text-[10px] text-[#6B7280] font-mono">HI</span>
+            </button>
+            <button type="button" class="lang-option-btn w-full px-3 py-2 rounded-xl text-left text-xs font-bold flex items-center justify-between hover:bg-[#FEF08A] text-[#111827] transition-colors" data-lang="ta">
+              <span>🪔 தமிழ்</span>
+              <span class="text-[10px] text-[#6B7280] font-mono">TA</span>
+            </button>
+            <button type="button" class="lang-option-btn w-full px-3 py-2 rounded-xl text-left text-xs font-bold flex items-center justify-between hover:bg-[#FEF08A] text-[#111827] transition-colors" data-lang="kn">
+              <span>🚩 ಕನ್ನಡ</span>
+              <span class="text-[10px] text-[#6B7280] font-mono">KN</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Online Badge -->
+        <button id="network-badge" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#DC2626] text-white text-xs font-black shadow-sm cursor-pointer hover:opacity-90" title="Click to cycle: Online ➔ Weak ➔ Offline">
+          <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+          <span id="network-status-text">Online</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN CONTENT AREA ==================== -->
+  <main class="flex-1 flex flex-col relative w-full pt-28 pb-24 max-w-7xl mx-auto px-4 sm:px-6">
+
+    <!-- ================================================================ -->
+    <!-- VIEW 1: HOME VIEW (/home)                                        -->
+    <!-- ================================================================ -->
+    <section id="view-home" class="flex flex-col gap-6">
+      <!-- 2-Column Hero Card in High-Contrast Black, Red, and Light Yellow -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-white p-5 sm:p-7 rounded-3xl border-2 border-[#111827]/10 shadow-card-clean">
+        
+        <!-- Left Column: Search & Persona Selector -->
+        <div class="lg:col-span-7 flex flex-col justify-between gap-6">
+          <div class="flex flex-col">
+            <h1 id="home-welcome-title" class="text-3xl sm:text-4xl font-black text-[#111827] tracking-tight leading-tight">
+              Where do you want <span class="text-[#DC2626]">to go?</span>
+            </h1>
+            <p id="home-welcome-sub" class="text-sm text-[#4B5563] mt-1.5 font-bold">
+              Tell us, type it, or scan a bus board.
+            </p>
+          </div>
+
+          <!-- 3 Primary Action Tiles -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+            <!-- 1. SPEAK (Crimson Red Card) -->
+            <button id="home-speak-btn" type="button" class="p-4 rounded-2xl bg-[#DC2626] text-white hover:bg-[#B91C1C] active:scale-95 transition-all shadow-btn-red flex flex-col items-center justify-center text-center gap-2 group">
+              <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-[28px] text-white">mic</span>
+              </div>
+              <div class="flex flex-col">
+                <span id="home-speak-title" class="font-black text-sm text-white">Speak</span>
+                <span id="home-speak-sub" class="text-[11px] text-white/90 font-medium">In your language</span>
+              </div>
+            </button>
+
+            <!-- 2. TYPE (Crisp White Card with Black/Red Accents) -->
+            <button id="home-type-btn" type="button" class="p-4 rounded-2xl bg-white hover:bg-[#FFFBEB] active:scale-95 transition-all shadow-sm border-2 border-[#111827] flex flex-col items-center justify-center text-center gap-2 group">
+              <div class="w-12 h-12 rounded-full bg-[#FEF08A] text-[#111827] flex items-center justify-center group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-[28px]">keyboard</span>
+              </div>
+              <div class="flex flex-col">
+                <span id="home-type-title" class="font-black text-sm text-[#111827]">Type</span>
+                <span id="home-type-sub" class="text-[11px] text-[#4B5563] font-medium">Your journey</span>
+              </div>
+            </button>
+
+            <!-- 3. SCAN BUS BOARD (Crisp White Card with Gold/Red Accents) -->
+            <button id="home-scan-btn" type="button" class="p-4 rounded-2xl bg-white hover:bg-[#FFFBEB] active:scale-95 transition-all shadow-sm border-2 border-[#111827] flex flex-col items-center justify-center text-center gap-2 group">
+              <div class="w-12 h-12 rounded-full bg-[#FEF08A] text-[#111827] flex items-center justify-center group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-[28px]">photo_camera</span>
+              </div>
+              <div class="flex flex-col">
+                <span id="home-scan-title" class="font-black text-sm text-[#111827]">Scan Bus Board</span>
+                <span id="home-scan-sub" class="text-[11px] text-[#4B5563] font-medium">Using RouteLens</span>
+              </div>
+            </button>
+          </div>
+
+          <!-- Role Selection: ആരാണ് നിങ്ങൾ? / How will you use ANAVANDI CONNECT? -->
+          <div class="flex flex-col gap-3 pt-2" id="role-selection-section">
+            <div class="flex flex-col">
+              <h2 class="text-base sm:text-lg font-black text-[#111827] flex items-center gap-2">
+                <span id="role-select-title">ആരാണ് നിങ്ങൾ?</span>
+                <span id="role-select-tag" class="text-[10px] font-black text-[#DC2626] bg-[#FFFBEB] px-2 py-0.5 rounded-full border border-[#FDE047]">Select Role</span>
+              </h2>
+              <p id="role-select-sub" class="text-xs text-[#4B5563] font-bold mt-0.5">
+                How will you use ANAVANDI CONNECT?
+              </p>
+            </div>
+
+            <!-- 4 Selectable Role Cards (2x2 on desktop, 1 col on mobile) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5" id="role-cards-container">
+              
+              <!-- 1. PASSENGER (Selected by Default) -->
+              <button type="button" class="role-select-card p-3.5 rounded-2xl bg-white border-2 border-[#111827] ring-2 ring-[#DC2626] shadow-sm flex flex-col justify-between text-left gap-2 cursor-pointer transition-all active:scale-98 group" data-role="passenger" onclick="window.anavandiApp.selectRole('passenger')">
+                <div class="flex items-start justify-between gap-1.5">
+                  <div class="flex items-center gap-2">
+                    <div class="w-9 h-9 rounded-xl bg-[#FFFBEB] text-[#DC2626] border border-[#111827] flex items-center justify-center font-black text-lg shrink-0 group-hover:scale-105 transition-transform">
+                      🚌
+                    </div>
+                    <div class="flex flex-col">
+                      <span id="role-title-passenger" class="text-xs font-black text-[#111827] leading-tight">യാത്രികൻ</span>
+                      <span id="role-sub-passenger" class="text-[10px] font-black tracking-wider text-[#DC2626] uppercase">/ PASSENGER</span>
+                    </div>
+                  </div>
+                  <span id="role-badge-passenger" class="px-2 py-0.5 rounded-full bg-[#FEF08A] text-[#111827] text-[9px] font-black border border-[#111827] shrink-0">
+                    പൊതുജനങ്ങൾക്കായി
+                  </span>
+                </div>
+                <p id="role-desc-passenger" class="text-[11px] text-[#4B5563] font-medium leading-snug">
+                  Find my bus • ടിക്കറ്റ് & യാത്രാ വഴി കണ്ടെത്തുക
+                </p>
+              </button>
+
+              <!-- 2. DEPOT STAFF -->
+              <button type="button" class="role-select-card p-3.5 rounded-2xl bg-[#FFFBEB] hover:bg-[#FEF08A]/60 border-2 border-[#FDE047] shadow-xs flex flex-col justify-between text-left gap-2 cursor-pointer transition-all active:scale-98 group" data-role="depot" onclick="window.anavandiApp.selectRole('depot')">
+                <div class="flex items-start justify-between gap-1.5">
+                  <div class="flex items-center gap-2">
+                    <div class="w-9 h-9 rounded-xl bg-white text-[#111827] border border-[#111827]/20 flex items-center justify-center font-black text-lg shrink-0 group-hover:scale-105 transition-transform">
+                      🏢
+                    </div>
+                    <div class="flex flex-col">
+                      <span id="role-title-depot" class="text-xs font-black text-[#111827] leading-tight">ഡിപ്പോ ജീവനക്കാരൻ</span>
+                      <span id="role-sub-depot" class="text-[10px] font-black tracking-wider text-[#4B5563] uppercase">/ DEPOT STAFF</span>
+                    </div>
+                  </div>
+                </div>
+                <p id="role-desc-depot" class="text-[11px] text-[#4B5563] font-medium leading-snug">
+                  Manage live schedules, platform charts & station notices
+                </p>
+              </button>
+
+              <!-- 3. CREW -->
+              <button type="button" class="role-select-card p-3.5 rounded-2xl bg-[#FFFBEB] hover:bg-[#FEF08A]/60 border-2 border-[#FDE047] shadow-xs flex flex-col justify-between text-left gap-2 cursor-pointer transition-all active:scale-98 group" data-role="crew" onclick="window.anavandiApp.selectRole('crew')">
+                <div class="flex items-start justify-between gap-1.5">
+                  <div class="flex items-center gap-2">
+                    <div class="w-9 h-9 rounded-xl bg-white text-[#111827] border border-[#111827]/20 flex items-center justify-center font-black text-lg shrink-0 group-hover:scale-105 transition-transform">
+                      👨‍✈️
+                    </div>
+                    <div class="flex flex-col">
+                      <span id="role-title-crew" class="text-xs font-black text-[#111827] leading-tight">ഡ്രൈവർ / കണ്ടക്ടർ</span>
+                      <span id="role-sub-crew" class="text-[10px] font-black tracking-wider text-[#4B5563] uppercase">/ CREW</span>
+                    </div>
+                  </div>
+                </div>
+                <p id="role-desc-crew" class="text-[11px] text-[#4B5563] font-medium leading-snug">
+                  Duty roster, trip sheets & waypoint updates
+                </p>
+              </button>
+
+              <!-- 4. ADMIN / VERIFY -->
+              <button type="button" class="role-select-card p-3.5 rounded-2xl bg-[#FFFBEB] hover:bg-[#FEF08A]/60 border-2 border-[#FDE047] shadow-xs flex flex-col justify-between text-left gap-2 cursor-pointer transition-all active:scale-98 group" data-role="admin" onclick="window.anavandiApp.selectRole('admin')">
+                <div class="flex items-start justify-between gap-1.5">
+                  <div class="flex items-center gap-2">
+                    <div class="w-9 h-9 rounded-xl bg-white text-[#111827] border border-[#111827]/20 flex items-center justify-center font-black text-lg shrink-0 group-hover:scale-105 transition-transform">
+                      🛡️
+                    </div>
+                    <div class="flex flex-col">
+                      <span id="role-title-admin" class="text-xs font-black text-[#111827] leading-tight">ADMIN</span>
+                      <span id="role-sub-admin" class="text-[10px] font-black tracking-wider text-[#4B5563] uppercase">/ VERIFY</span>
+                    </div>
+                  </div>
+                </div>
+                <p id="role-desc-admin" class="text-[11px] text-[#4B5563] font-medium leading-snug">
+                  Route validation, transport data audit & fleet sync
+                </p>
+              </button>
+
+            </div>
+
+            <!-- Role Action Buttons: Start Journey & Continue as Guest -->
+            <div class="flex flex-col gap-1.5 pt-1">
+              <button id="btn-start-role-journey" type="button" class="w-full py-3 px-4 rounded-xl bg-[#DC2626] hover:bg-[#B91C1C] text-white font-black text-xs sm:text-sm tracking-wide shadow-btn-red active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer" onclick="window.anavandiApp.handleRoleStart()">
+                <span id="btn-start-role-text">തുടങ്ങാം / Start Journey</span>
+                <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+              </button>
+              
+              <button type="button" class="w-full py-1.5 text-center text-[11px] font-bold text-[#4B5563] hover:text-[#111827] hover:underline transition-colors cursor-pointer" onclick="window.anavandiApp.handleGuestContinue()">
+                <span id="btn-guest-continue-text">രജിസ്ട്രേഷൻ ഇല്ലാതെ തുടരുക / Continue as Guest</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: KSRTC Backwaters Illustration & ANNA Assistant -->
+        <div class="lg:col-span-5 flex flex-col gap-3.5">
+          <!-- Scenic Illustration Card -->
+          <div class="relative w-full h-56 sm:h-64 rounded-2xl overflow-hidden bg-[#111827] shadow-md border-2 border-[#111827]">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQap-B39r1Z0h_Xh28MC9Szx9nBmRVMjt61vlp21Vzi3_iYMcoffXcchS4Hp8DDgYEhFfF7k4eX9m4MxtBRIviM8KJw7Sz6dhCt4SrXOqlM7XeF9YXzvQVzpJrR3wDW8672ibvqwBbzwpjaqHQhlTzY1kaO9Ew1vnHOpoeBh89HTVkdEfopXNiR85cyn3yXsqNtHwn-w32iziTiqYCjFdUbiXL4JueB0EnE04F379mz0EsJYyIrEp3" alt="KSRTC bus traveling along Kerala backwaters" class="w-full h-full object-cover"/>
+            
+            <!-- Bus Plate Badge in Yellow/Black -->
+            <div class="absolute bottom-3 right-3 px-3 py-1 rounded-md bg-[#FACC15] text-[#111827] font-mono text-xs font-black border border-[#111827] shadow-md">
+              KL 15 0007
+            </div>
+          </div>
+
+          <!-- Floating Speech Card & ANNA Mascot -->
+          <div class="p-4 rounded-2xl bg-white border-2 border-[#111827] shadow-sm flex items-center justify-between gap-3">
+            <div class="flex flex-col text-left">
+              <span class="text-xs font-black text-[#111827]">“സുരക്ഷിത യാത്ര, നിങ്ങളുടെ കൂടെ”</span>
+              <span class="text-[11px] text-[#4B5563] font-medium">A smarter, simpler way to travel by bus in Kerala.</span>
+            </div>
+            
+            <!-- Meet ANNA Assistant Pill in Yellow/Red -->
+            <div class="flex items-center gap-2 bg-[#FEF08A] px-3 py-1.5 rounded-2xl border border-[#111827] shrink-0">
+              <div class="w-8 h-8 rounded-full bg-[#111827] flex items-center justify-center text-white text-base shadow-xs">
+                🤖
+              </div>
+              <div class="flex flex-col">
+                <span class="text-[11px] font-black text-[#111827] leading-tight">Meet ANNA</span>
+                <span class="text-[9px] text-[#DC2626] font-black">Your Assistant</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Horizontal 5-Pill Feature Strip in Light Yellow & Black -->
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 bg-white p-4 rounded-2xl border-2 border-[#111827]/10 shadow-sm text-center text-xs">
+        <div class="flex items-center justify-center gap-2 p-2 rounded-xl hover:bg-[#FFFBEB] transition-colors">
+          <span class="material-symbols-outlined text-[20px] text-[#DC2626]">translate</span>
+          <div class="flex flex-col text-left">
+            <span class="font-black text-[#111827] leading-tight">5 Languages</span>
+            <span class="text-[10px] text-[#4B5563] font-bold">Including Malayalam</span>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-center gap-2 p-2 rounded-xl hover:bg-[#FFFBEB] transition-colors">
+          <span class="material-symbols-outlined text-[20px] text-[#DC2626]">offline_bolt</span>
+          <div class="flex flex-col text-left">
+            <span class="font-black text-[#111827] leading-tight">Real-time & Offline</span>
+            <span class="text-[10px] text-[#4B5563] font-bold">With cached data</span>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-center gap-2 p-2 rounded-xl hover:bg-[#FFFBEB] transition-colors">
+          <span class="material-symbols-outlined text-[20px] text-[#DC2626]">document_scanner</span>
+          <div class="flex flex-col text-left">
+            <span class="font-black text-[#111827] leading-tight">Scan & Translate</span>
+            <span class="text-[10px] text-[#4B5563] font-bold">Bus boards</span>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-center gap-2 p-2 rounded-xl hover:bg-[#FFFBEB] transition-colors">
+          <span class="material-symbols-outlined text-[20px] text-[#DC2626]">map</span>
+          <div class="flex flex-col text-left">
+            <span class="font-black text-[#111827] leading-tight">Route & Fare</span>
+            <span class="text-[10px] text-[#4B5563] font-bold">With visual map</span>
+          </div>
+        </div>
+
+        <div class="col-span-2 sm:col-span-1 flex items-center justify-center gap-2 p-2 rounded-xl hover:bg-[#FFFBEB] transition-colors">
+          <span class="material-symbols-outlined text-[20px] text-[#DC2626]">accessibility</span>
+          <div class="flex flex-col text-left">
+            <span class="font-black text-[#111827] leading-tight">Accessible for All</span>
+            <span class="text-[10px] text-[#4B5563] font-bold">Passenger, Staff, Crew, Admin</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- VIEW 2: SPEAK YOUR DESTINATION (/voice)                          -->
+    <!-- ================================================================ -->
+    <section id="view-voice" class="hidden flex flex-col gap-6 max-w-2xl mx-auto w-full">
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-[#111827] shadow-card-clean flex flex-col items-center text-center gap-6">
+        <h1 class="text-2xl font-black text-[#111827]">Speak your destination</h1>
+        
+        <!-- Large Pulsing Microphone -->
+        <div class="relative my-2 flex items-center justify-center">
+          <span id="voice-pulse-ring" class="absolute w-36 h-36 rounded-full bg-[#DC2626]/20 animate-ping"></span>
+          <button id="voice-mic-trigger" type="button" class="w-24 h-24 rounded-full bg-[#DC2626] text-white flex items-center justify-center shadow-btn-red hover:bg-[#B91C1C] active:scale-95 transition-transform" title="Tap to Speak">
+            <span class="material-symbols-outlined text-[44px]">mic</span>
+          </button>
+        </div>
+
+        <!-- Waveform & Transcript -->
+        <div class="flex flex-col items-center gap-2 w-full">
+          <span class="text-xs font-black text-[#DC2626] uppercase tracking-wider" id="voice-status-indicator">Listening...</span>
+          <div id="voice-waveform-container" class="h-8 flex items-center gap-1.5 justify-center py-1">
+            <span class="wave-bar w-1.5 bg-[#DC2626] rounded-full h-2"></span>
+            <span class="wave-bar w-1.5 bg-[#FACC15] rounded-full h-4"></span>
+            <span class="wave-bar w-1.5 bg-[#111827] rounded-full h-6"></span>
+            <span class="wave-bar w-1.5 bg-[#DC2626] rounded-full h-8"></span>
+            <span class="wave-bar w-1.5 bg-[#FACC15] rounded-full h-4"></span>
+            <span class="wave-bar w-1.5 bg-[#111827] rounded-full h-2"></span>
+          </div>
+          <p id="voice-live-transcript-bubble" class="text-xl font-black text-[#111827]">
+            എനിക്ക് ആലുവ പോകണം
+          </p>
+        </div>
+
+        <!-- Detected Badges Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-lg text-left">
+          <div class="p-4 rounded-2xl bg-[#FFFBEB] border-2 border-[#FDE047] flex items-center gap-2.5">
+            <span class="material-symbols-outlined text-[#111827] text-[22px]">check_circle</span>
+            <div class="flex flex-col">
+              <span class="text-[10px] text-[#4B5563] uppercase font-bold">Detected language</span>
+              <span id="voice-detected-lang" class="text-sm font-black text-[#111827]">Malayalam</span>
+            </div>
+          </div>
+          <div class="p-4 rounded-2xl bg-[#FFFBEB] border-2 border-[#DC2626] flex items-center gap-2.5">
+            <span class="material-symbols-outlined text-[#DC2626] text-[22px]">check_circle</span>
+            <div class="flex flex-col">
+              <span class="text-[10px] text-[#4B5563] uppercase font-bold">Recognized request</span>
+              <span id="voice-recognized-target" class="text-sm font-black text-[#DC2626]">Ernakulam to Aluva</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="grid grid-cols-2 gap-3 w-full max-w-lg">
+          <button id="voice-confirm-btn" type="button" class="py-3.5 px-4 rounded-xl bg-[#DC2626] text-white font-black text-xs shadow-btn-red hover:bg-[#B91C1C] active:scale-95 transition-colors">
+            Confirm
+          </button>
+          <button id="voice-retry-btn" type="button" class="py-3.5 px-4 rounded-xl bg-[#F3F4F6] hover:bg-[#E5E7EB] text-[#111827] font-black text-xs border border-[#111827] active:scale-95 transition-colors">
+            Speak Again
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- VIEW 3: TYPE YOUR JOURNEY (/plan)                                -->
+    <!-- ================================================================ -->
+    <section id="view-plan" class="hidden flex flex-col gap-6 max-w-2xl mx-auto w-full">
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-[#111827] shadow-card-clean flex flex-col gap-5">
+        <h1 class="text-2xl font-black text-[#111827]">Type your journey</h1>
+
+        <!-- Search Input with Send Button -->
+        <form id="route-planner-form" class="flex flex-col gap-4">
+          <div class="relative flex items-center rounded-2xl bg-white border-2 border-[#111827] p-1.5 focus-within:border-[#DC2626] shadow-sm">
+            <input id="journey-dest-input" type="text" class="w-full bg-transparent px-4 py-2.5 text-base font-bold text-[#111827] focus:outline-none placeholder-[#9CA3AF]" value="Ernakulam to Aluva" placeholder="e.g. Ernakulam to Aluva"/>
+            <button type="submit" class="w-11 h-11 rounded-xl bg-[#DC2626] text-white flex items-center justify-center hover:bg-[#B91C1C] active:scale-95 shrink-0 transition-colors shadow-sm">
+              <span class="material-symbols-outlined text-[22px]">send</span>
+            </button>
+          </div>
+
+          <!-- Hidden from input for form compatibility -->
+          <input id="journey-origin-input" type="hidden" value="Ernakulam South"/>
+
+          <!-- Example Pills -->
+          <div class="flex flex-col gap-2 pt-1">
+            <span class="text-xs font-black text-[#111827]">Try these examples</span>
+            <div class="grid grid-cols-2 gap-2.5">
+              <button type="button" class="p-3 rounded-xl bg-[#FFFBEB] hover:bg-[#FEF08A] border-2 border-[#FDE047] text-xs font-black text-[#111827] text-center active:scale-95 transition-colors" onclick="window.anavandiApp.fillDestination('Ernakulam to Aluva')">
+                Ernakulam to Aluva
+              </button>
+              <button type="button" class="p-3 rounded-xl bg-[#FFFBEB] hover:bg-[#FEF08A] border-2 border-[#FDE047] text-xs font-black text-[#111827] text-center active:scale-95 transition-colors" onclick="window.anavandiApp.fillDestination('Thrissur to Palakkad')">
+                Thrissur to Palakkad
+              </button>
+              <button type="button" class="p-3 rounded-xl bg-[#FFFBEB] hover:bg-[#FEF08A] border-2 border-[#FDE047] text-xs font-black text-[#111827] text-center active:scale-95 transition-colors" onclick="window.anavandiApp.fillDestination('Trivandrum to Munnar')">
+                Trivandrum to Munnar
+              </button>
+              <button type="button" class="p-3 rounded-xl bg-[#FFFBEB] hover:bg-[#FEF08A] border-2 border-[#FDE047] text-xs font-black text-[#111827] text-center active:scale-95 transition-colors" onclick="window.anavandiApp.fillDestination('Kozhikode to Manjeri')">
+                Kozhikode to Manjeri
+              </button>
+            </div>
+          </div>
+
+          <!-- Plan My Journey Red CTA Button -->
+          <button type="submit" class="mt-2 min-h-[50px] py-3.5 px-4 rounded-xl bg-[#DC2626] text-white font-black text-sm shadow-btn-red hover:bg-[#B91C1C] active:scale-95 transition-colors flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[20px]">map</span>
+            <span>Plan My Journey</span>
+          </button>
+        </form>
+
+        <!-- Understanding intermediate card -->
+        <div id="plan-understanding-card" class="hidden bg-[#FEF08A] border-2 border-[#111827] p-4 rounded-2xl flex flex-col gap-2">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-black text-[#111827]">Target: <strong id="understood-to-val" class="text-[#DC2626]">Aluva</strong></span>
+            <button id="btn-confirm-understanding" type="button" class="px-4 py-1.5 rounded-lg bg-[#DC2626] text-white font-black text-xs shadow-sm">Proceed</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- VIEW 4: ROUTELENS OCR SCANNER (/routelens)                       -->
+    <!-- ================================================================ -->
+    <section id="view-routelens" class="hidden flex flex-col gap-6 max-w-4xl mx-auto w-full">
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-[#111827] shadow-card-clean flex flex-col gap-5">
+        
+        <!-- Header & Control Bar -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-[#DC2626] text-[26px]">document_scanner</span>
+              <h1 class="text-2xl font-black text-[#111827]">RouteLens OCR</h1>
+            </div>
+            <p class="text-xs text-[#4B5563] font-bold mt-0.5">Upload a bus board image & translate into Malayalam script</p>
+          </div>
+
+          <!-- Hidden File Input & Upload Action Buttons -->
+          <div class="flex items-center gap-2">
+            <input id="ocr-file-upload" type="file" accept="image/*" class="hidden"/>
+            
+            <button type="button" class="px-4 py-2.5 rounded-xl bg-[#DC2626] hover:bg-[#B91C1C] text-white font-black text-xs shadow-btn-red active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer" onclick="document.getElementById('ocr-file-upload').click()">
+              <span class="material-symbols-outlined text-[18px]">upload_file</span>
+              <span>Upload Image & Translate</span>
+            </button>
+
+            <button id="ocr-open-camera-btn" type="button" class="px-3.5 py-2.5 rounded-xl bg-[#FFFBEB] hover:bg-[#FEF08A] text-[#111827] border border-[#111827] font-black text-xs transition-all flex items-center gap-1.5 cursor-pointer">
+              <span class="material-symbols-outlined text-[18px] text-[#DC2626]">photo_camera</span>
+              <span>Camera</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-5">
+          <!-- Left Column: Viewfinder & Image Preview -->
+          <div class="md:col-span-7 relative aspect-[4/3] rounded-2xl overflow-hidden bg-[#111827] shadow-md border-2 border-[#FACC15]">
+            <img id="ocr-board-image" class="w-full h-full object-cover" alt="Kerala Bus Board" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCftujLUX-DEGrnqxMF-FI2Raa3aHIIf-xoKrK43sY-WFpfPlzEJNQQk2dmUkUFrYsyLutiozpj1DBgVJ0wPPobdHLuz02EK8K524RvuiwXxjQbDChNQlapG40FZ9KWdSNwBNhLvAp12uSv_5dENdZOLOjUqFuz1Aldf1Kh31yNeFqRK0AaDd91t8O4vcc5gdzhS09we2y-VNYeC2H_p-_cwnHILwAH2uycF-v4bu_P11M8DIFYsSQc"/>
+            <video id="ocr-camera-stream" class="hidden w-full h-full object-cover" autoplay playsinline muted></video>
+
+            <!-- Red Laser Scanning Line -->
+            <div id="ocr-scan-line" class="scanner-laser absolute left-4 right-4 h-1 bg-[#DC2626] shadow-[0_0_14px_#DC2626] z-20"></div>
+
+            <!-- Focus Corner Brackets -->
+            <div class="absolute inset-4 pointer-events-none z-10 flex flex-col justify-between p-2">
+              <div class="flex justify-between">
+                <span class="w-7 h-7 border-t-4 border-l-4 border-white"></span>
+                <span class="w-7 h-7 border-t-4 border-r-4 border-white"></span>
+              </div>
+              <div class="flex justify-between">
+                <span class="w-7 h-7 border-b-4 border-l-4 border-white"></span>
+                <span class="w-7 h-7 border-b-4 border-r-4 border-white"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: 5-Step AI Extraction & Malayalam Translation Results -->
+          <div class="md:col-span-5 flex flex-col justify-between gap-3 bg-[#FFFBEB] p-4 rounded-2xl border-2 border-[#FDE047]">
+            <div class="flex flex-col gap-2">
+              <span class="text-[10px] font-black uppercase tracking-wider text-[#DC2626]">Live Malayalam Translation Engine</span>
+              
+              <div id="ocr-pipeline-checklist" class="flex flex-col gap-2">
+                <div class="flex items-center gap-2 text-xs font-black text-[#111827]">
+                  <span class="w-5 h-5 rounded-full bg-[#111827] text-white flex items-center justify-center text-[11px] font-black">✓</span>
+                  <span>1. Image extracted</span>
+                </div>
+                <div class="flex items-center gap-2 text-xs font-black text-[#111827]">
+                  <span class="w-5 h-5 rounded-full bg-[#111827] text-white flex items-center justify-center text-[11px] font-black">✓</span>
+                  <span>2. Text recognized</span>
+                </div>
+                <div class="flex items-center gap-2 text-xs font-black text-[#111827]">
+                  <span class="w-5 h-5 rounded-full bg-[#111827] text-white flex items-center justify-center text-[11px] font-black">✓</span>
+                  <span>3. Translated to Malayalam (മലയാളം)</span>
+                </div>
+                <div class="flex items-center gap-2 text-xs font-black text-[#111827]">
+                  <span class="w-5 h-5 rounded-full bg-[#111827] text-white flex items-center justify-center text-[11px] font-black">✓</span>
+                  <span>4. Matched corridor stop</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Prominent Malayalam Script Result Box -->
+            <div id="ocr-result-display-box" class="p-3.5 bg-white rounded-xl border-2 border-[#111827] shadow-sm flex flex-col gap-1.5">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-black text-[#DC2626] uppercase">Malayalam Script</span>
+                <span class="text-[10px] font-bold text-[#4B5563]" id="ocr-status-pct">Confidence: 96%</span>
+              </div>
+              <div class="flex items-baseline justify-between">
+                <h2 id="ocr-result-malayalam" class="text-2xl font-black text-[#111827]">ആലുവ</h2>
+                <span id="ocr-result-english" class="text-xs font-bold text-[#DC2626]">/ ALUVA</span>
+              </div>
+              <span id="ocr-result-sub" class="text-[10px] text-[#4B5563] font-bold">Verified Destination Terminal • Route 42 Fast Passenger</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Try Demo Bus Board Cards -->
+        <div class="flex flex-col gap-2 pt-1 border-t border-[#E5E7EB]">
+          <span class="text-xs font-black text-[#111827]">Or try sample bus boards with instant Malayalam translation:</span>
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-2.5">
+            <button type="button" class="p-3 rounded-xl bg-[#FFFBEB] hover:bg-[#FEF08A] border-2 border-[#FDE047] text-left flex items-center justify-between active:scale-95 transition-all" onclick="window.anavandiApp.loadSampleBoard(0)">
+              <div>
+                <span class="text-xs font-black text-[#111827] block">ആലുവ (ALUVA)</span>
+                <span class="text-[10px] text-[#DC2626] font-bold">Fast Passenger Board</span>
+              </div>
+              <span class="material-symbols-outlined text-[18px] text-[#111827]">translate</span>
+            </button>
+
+            <button type="button" class="p-3 rounded-xl bg-[#FFFBEB] hover:bg-[#FEF08A] border-2 border-[#FDE047] text-left flex items-center justify-between active:scale-95 transition-all" onclick="window.anavandiApp.loadSampleBoard(4)">
+              <div>
+                <span class="text-xs font-black text-[#111827] block">ദ്വാരക / Dwarka Sign</span>
+                <span class="text-[10px] text-[#DC2626] font-bold">Highway Sign Board</span>
+              </div>
+              <span class="material-symbols-outlined text-[18px] text-[#DC2626]">alt_route</span>
+            </button>
+
+            <button type="button" class="p-3 rounded-xl bg-[#FFFBEB] hover:bg-[#FEF08A] border-2 border-[#FDE047] text-left flex items-center justify-between active:scale-95 transition-all" onclick="window.anavandiApp.loadSampleBoard(2)">
+              <div>
+                <span class="text-xs font-black text-[#111827] block">കോട്ടയം (KOTTAYAM)</span>
+                <span class="text-[10px] text-[#DC2626] font-bold">Super Fast Express</span>
+              </div>
+              <span class="material-symbols-outlined text-[18px] text-[#111827]">translate</span>
+            </button>
+
+            <button type="button" class="p-3 rounded-xl bg-[#FFFBEB] hover:bg-[#FEF08A] border-2 border-[#FDE047] text-left flex items-center justify-between active:scale-95 transition-all" onclick="window.anavandiApp.loadSampleBoard(3)">
+              <div>
+                <span class="text-xs font-black text-[#111827] block">തൃശ്ശൂർ (THRISSUR)</span>
+                <span class="text-[10px] text-[#DC2626] font-bold">Northern Corridor</span>
+              </div>
+              <span class="material-symbols-outlined text-[18px] text-[#111827]">translate</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Recognized Status Pill & CTA Button -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+          <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FEF08A] border-2 border-[#111827] text-xs font-black text-[#111827]">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#DC2626]"></span>
+            <span>Stop recognized: Aluva (ആലുവ)</span>
+          </div>
+
+          <button id="ocr-find-route-cta" type="button" class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-[#DC2626] text-white font-black text-xs shadow-btn-red hover:bg-[#B91C1C] active:scale-95 transition-colors" onclick="window.anavandiApp.fillDestination('Aluva')">
+            Find My Route (ആലുവ) →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- VIEW 5: YOUR JOURNEY (/journey)                                  -->
+    <!-- ================================================================ -->
+    <section id="view-journey" class="hidden flex flex-col gap-6 max-w-4xl mx-auto w-full">
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-[#111827] shadow-card-clean flex flex-col gap-5">
+        
+        <!-- Header Route Title in Black and Red -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h1 class="text-2xl font-black text-[#111827]">Your Journey</h1>
+            <div class="flex items-center gap-2 text-xs font-bold text-[#4B5563] mt-0.5">
+              <span>From <strong class="text-[#111827]">Ernakulam South</strong></span>
+              <span class="material-symbols-outlined text-[16px] text-[#DC2626]">arrow_forward</span>
+              <span>To <strong class="text-[#DC2626]">Aluva</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 Stat Badges Grid in Light Yellow/Black/Red -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+          <div class="p-3.5 rounded-2xl bg-[#FFFBEB] border-2 border-[#FDE047] flex flex-col items-center">
+            <span class="text-[10px] font-black text-[#4B5563] uppercase">Distance</span>
+            <span class="text-base font-black text-[#111827] mt-0.5">15 km</span>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-[#FFFBEB] border-2 border-[#FDE047] flex flex-col items-center">
+            <span class="text-[10px] font-black text-[#4B5563] uppercase">Journey Time</span>
+            <span class="text-base font-black text-[#111827] mt-0.5">~ 45 mins</span>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-[#FFFBEB] border-2 border-[#FDE047] flex flex-col items-center">
+            <span class="text-[10px] font-black text-[#4B5563] uppercase">Fare Stages</span>
+            <span class="text-base font-black text-[#111827] mt-0.5">4</span>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-[#FFFBEB] border-2 border-[#FDE047] flex flex-col items-center">
+            <span class="text-[10px] font-black text-[#4B5563] uppercase">Estimated Fare</span>
+            <span class="text-base font-black text-[#DC2626] mt-0.5">₹ 40 <span class="text-[10px] font-bold text-[#4B5563]">(est.)</span></span>
+          </div>
+        </div>
+
+        <!-- Tab Switcher -->
+        <div class="flex items-center gap-1.5 p-1.5 bg-[#F3F4F6] rounded-full overflow-x-auto border border-[#E5E7EB]">
+          <button type="button" class="flex-1 py-2 px-3.5 rounded-full bg-[#111827] text-white font-bold text-xs shadow-sm text-center flex items-center justify-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px]">timeline</span>
+            <span>Visual Journey</span>
+          </button>
+          <a href="#map" data-nav-target="map" class="flex-1 py-2 px-3.5 rounded-full text-[#111827] hover:bg-[#FEF08A] font-bold text-xs text-center flex items-center justify-center gap-1.5 transition-colors">
+            <span class="material-symbols-outlined text-[16px]">map</span>
+            <span>Map</span>
+          </a>
+          <button type="button" class="flex-1 py-2 px-3.5 rounded-full text-[#111827] hover:bg-[#FEF08A] font-bold text-xs text-center flex items-center justify-center gap-1.5 transition-colors" onclick="document.getElementById('journey-stops-timeline-block').scrollIntoView({behavior:'smooth'})">
+            <span class="material-symbols-outlined text-[16px]">format_list_bulleted</span>
+            <span>Stops</span>
+          </button>
+          <a href="#help" data-nav-target="help" class="flex-1 py-2 px-3.5 rounded-full text-[#111827] hover:bg-[#FEF08A] font-bold text-xs text-center flex items-center justify-center gap-1.5 transition-colors">
+            <span class="material-symbols-outlined text-[16px]">info</span>
+            <span>Details</span>
+          </a>
+        </div>
+
+        <!-- Scenic Visual Journey Strip with Jet Black Route Line & Moving Red Bus -->
+        <div class="relative w-full rounded-2xl p-5 bg-[#FFFBEB] border-2 border-[#FDE047] overflow-hidden flex flex-col gap-4">
+          <!-- Top Stops Labels -->
+          <div class="flex justify-between items-center text-xs font-black text-[#111827]">
+            <div class="flex items-center gap-1.5">
+              <span class="w-3.5 h-3.5 rounded-full bg-[#111827]"></span>
+              <span>Ernakulam South (Board)</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span>Aluva (Destination)</span>
+              <span class="w-3.5 h-3.5 rounded-full bg-[#DC2626]"></span>
+            </div>
+          </div>
+
+          <!-- Moving Timeline Track with Red Bus -->
+          <div class="relative w-full py-3">
+            <div class="w-full h-3 bg-[#E5E7EB] rounded-full overflow-hidden">
+              <div id="live-bus-track-progress" class="h-full bg-[#111827] rounded-full transition-all duration-700" style="width: 58%;"></div>
+            </div>
+            <!-- Animated Bus Pin -->
+            <div id="live-bus-indicator-pin" class="absolute top-0.5 transform -translate-x-1/2 transition-all duration-700 flex flex-col items-center" style="left: 58%;">
+              <div class="w-8 h-8 rounded-full bg-[#DC2626] text-white flex items-center justify-center shadow-btn-red border-2 border-[#FACC15] animate-bounce">
+                <span class="material-symbols-outlined text-[18px]">directions_bus</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Next Stop & Distance Status Pill -->
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-2 pt-2 border-t-2 border-[#E5E7EB] text-xs">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-[#DC2626] text-[22px]">directions_bus</span>
+              <div class="flex flex-col">
+                <span class="text-[10px] text-[#4B5563] font-bold">Next Stop</span>
+                <span class="font-black text-[#111827]">Kalamassery in 12 mins • 6 km</span>
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="text-[10px] text-[#4B5563] font-bold">Remaining Distance</span>
+              <span class="font-black text-[#DC2626] block text-sm">7 km ~ 20 mins</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 Bottom Action Pill Buttons -->
+        <div class="grid grid-cols-3 gap-3 pt-2">
+          <button id="voice-repeat-announcement-btn" type="button" class="py-3 px-3 rounded-xl bg-[#F3F4F6] hover:bg-[#FEF08A] border border-[#111827] text-xs font-black text-[#111827] flex items-center justify-center gap-1.5 active:scale-95 transition-colors">
+            <span class="material-symbols-outlined text-[16px]">volume_up</span>
+            <span>Audio Guidance</span>
+          </button>
+          <button id="journey-visual-mode-toggle" type="button" class="py-3 px-3 rounded-xl bg-[#F3F4F6] hover:bg-[#FEF08A] border border-[#111827] text-xs font-black text-[#111827] flex items-center justify-center gap-1.5 active:scale-95 transition-colors">
+            <span class="material-symbols-outlined text-[16px]">visibility</span>
+            <span>Visual Mode</span>
+          </button>
+          <button type="button" class="py-3 px-3 rounded-xl bg-[#F3F4F6] hover:bg-[#FEF08A] border border-[#111827] text-xs font-black text-[#111827] flex items-center justify-center gap-1.5 active:scale-95 transition-colors" onclick="navigator.clipboard && navigator.clipboard.writeText(window.location.href); alert('Journey link copied to clipboard!');">
+            <span class="material-symbols-outlined text-[16px]">share</span>
+            <span>Share Journey</span>
+          </button>
+        </div>
+
+        <!-- Stops Timeline Container -->
+        <div id="journey-stops-timeline-block" class="pt-2">
+          <div id="timeline-stops-list" class="flex flex-col gap-1.5"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- VIEW 6: ROUTE MAP (/map)                                         -->
+    <!-- ================================================================ -->
+    <section id="view-map" class="hidden flex flex-col gap-6 max-w-4xl mx-auto w-full">
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-[#111827] shadow-card-clean flex flex-col gap-5">
+        <h1 class="text-2xl font-black text-[#111827]">Route Map</h1>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          <!-- Left: Styled Canvas Map with Black & Red Markers -->
+          <div class="lg:col-span-8 bg-[#FFFBEB] border-2 border-[#111827] p-4 rounded-2xl flex flex-col items-center">
+            <svg viewBox="0 0 500 240" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
+              <rect x="10" y="10" width="480" height="220" rx="16" fill="#FFFFFF"/>
+              <path d="M 50 160 C 130 160, 160 80, 250 80 C 340 80, 380 140, 450 140" fill="none" stroke="#111827" stroke-width="8" stroke-linecap="round"/>
+              <path d="M 50 160 C 130 160, 160 80, 250 80 C 340 80, 380 140, 450 140" fill="none" stroke="#FACC15" stroke-width="3" stroke-dasharray="8 6" stroke-linecap="round"/>
+              
+              <!-- Stop 1: Ernakulam South -->
+              <circle cx="50" cy="160" r="10" fill="#111827" stroke="#FFFFFF" stroke-width="3"/>
+              <text x="50" y="195" font-size="11" font-weight="900" fill="#111827" text-anchor="middle">Ernakulam South (Board)</text>
+
+              <!-- Stop 2: Kalamassery -->
+              <circle cx="250" cy="80" r="8" fill="#111827" stroke="#FFFFFF" stroke-width="3"/>
+              <text x="250" y="65" font-size="10" font-weight="900" fill="#111827" text-anchor="middle">Kalamassery</text>
+
+              <!-- Stop 3: Aluva -->
+              <circle cx="450" cy="140" r="12" fill="#DC2626" stroke="#FACC15" stroke-width="3"/>
+              <text x="450" y="175" font-size="11" font-weight="900" fill="#DC2626" text-anchor="middle">Aluva (Exit here)</text>
+            </svg>
+          </div>
+
+          <!-- Right: Floating Map Stats Card -->
+          <div class="lg:col-span-4 bg-[#FFFBEB] p-4 rounded-2xl border-2 border-[#FDE047] flex flex-col justify-between gap-3">
+            <div class="flex flex-col gap-2.5 text-xs">
+              <div class="flex justify-between pb-1.5 border-b border-[#E5E7EB]">
+                <span class="text-[#4B5563] font-bold">Total Distance</span>
+                <span class="font-black text-[#111827]">15 km</span>
+              </div>
+              <div class="flex justify-between pb-1.5 border-b border-[#E5E7EB]">
+                <span class="text-[#4B5563] font-bold">Estimated Time</span>
+                <span class="font-black text-[#111827]">45 mins</span>
+              </div>
+              <div class="flex justify-between pb-1.5 border-b border-[#E5E7EB]">
+                <span class="text-[#4B5563] font-bold">Fare Stages</span>
+                <span class="font-black text-[#111827]">4</span>
+              </div>
+              <div class="flex justify-between pb-1.5 border-b border-[#E5E7EB]">
+                <span class="text-[#4B5563] font-bold">Estimated Fare</span>
+                <span class="font-black text-[#DC2626]">₹ 40</span>
+              </div>
+            </div>
+
+            <a href="#journey" data-nav-target="journey" class="py-3 px-4 rounded-xl bg-[#DC2626] text-white font-black text-xs text-center shadow-btn-red hover:bg-[#B91C1C] active:scale-95 transition-colors flex items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-[16px]">navigation</span>
+              <span>Start Navigation</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- VIEW 7: NEARBY STOPS (/nearby)                                   -->
+    <!-- ================================================================ -->
+    <section id="view-nearby" class="hidden flex flex-col gap-6 max-w-3xl mx-auto w-full">
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-[#111827] shadow-card-clean flex flex-col gap-5">
+        <div>
+          <h1 class="text-2xl font-black text-[#111827]">Nearby Stops</h1>
+          <p class="text-xs text-[#4B5563] font-bold">Closest stops from your location</p>
+        </div>
+
+        <!-- 3 Nearby Stop Cards -->
+        <div class="flex flex-col gap-3">
+          <!-- 1. Ernakulam South -->
+          <div class="p-4 rounded-2xl bg-[#FFFBEB] border-2 border-[#FDE047] flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-[#DC2626] text-white flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-[24px]">directions_bus</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="text-sm font-black text-[#111827]">Ernakulam South</span>
+                <span class="text-xs text-[#4B5563] font-bold">350 m • 5 mins walk</span>
+                <span class="text-[11px] text-[#DC2626] font-black">Routes: 42, 43, 57, 89</span>
+              </div>
+            </div>
+            <a href="#journey" data-nav-target="journey" class="px-4 py-2 rounded-xl bg-white hover:bg-[#111827] hover:text-white text-xs font-black text-[#111827] border-2 border-[#111827] active:scale-95 transition-colors shadow-sm">
+              Navigate
+            </a>
+          </div>
+
+          <!-- 2. Kaloor -->
+          <div class="p-4 rounded-2xl bg-[#FFFBEB] border-2 border-[#FDE047] flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-[#DC2626] text-white flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-[24px]">directions_bus</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="text-sm font-black text-[#111827]">Kaloor</span>
+                <span class="text-xs text-[#4B5563] font-bold">1.2 km • 15 mins walk</span>
+                <span class="text-[11px] text-[#DC2626] font-black">Routes: 12, 21, 45, 78</span>
+              </div>
+            </div>
+            <a href="#journey" data-nav-target="journey" class="px-4 py-2 rounded-xl bg-white hover:bg-[#111827] hover:text-white text-xs font-black text-[#111827] border-2 border-[#111827] active:scale-95 transition-colors shadow-sm">
+              Navigate
+            </a>
+          </div>
+
+          <!-- 3. Palarivattom -->
+          <div class="p-4 rounded-2xl bg-[#FFFBEB] border-2 border-[#FDE047] flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-[#DC2626] text-white flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-[24px]">directions_bus</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="text-sm font-black text-[#111827]">Palarivattom</span>
+                <span class="text-xs text-[#4B5563] font-bold">1.8 km • 20 mins walk</span>
+                <span class="text-[11px] text-[#DC2626] font-black">Routes: 33, 50, 61</span>
+              </div>
+            </div>
+            <a href="#journey" data-nav-target="journey" class="px-4 py-2 rounded-xl bg-white hover:bg-[#111827] hover:text-white text-xs font-black text-[#111827] border-2 border-[#111827] active:scale-95 transition-colors shadow-sm">
+              Navigate
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- ================================================================ -->
+    <!-- VIEW 10: COMPLETE MOCKUP SHOWCASE BOARD (/showcase)              -->
+    <!-- ================================================================ -->
+    <section id="view-showcase" class="hidden flex flex-col gap-8 w-full">
+      <div class="flex items-center justify-between pb-2 border-b-2 border-[#111827]">
+        <div>
+          <h1 class="text-2xl font-black text-[#111827]">Mockup Presentation Grid</h1>
+          <p class="text-xs text-[#4B5563] font-bold">All 8 core screen mockups rendered simultaneously with High Contrast Red / Black / Yellow</p>
+        </div>
+        <a href="#home" data-nav-target="home" class="px-4 py-2 rounded-xl bg-[#111827] text-white font-black text-xs shadow-btn-black active:scale-95">
+          ← Back to Interactive App
+        </a>
+      </div>
+
+      <!-- 8-Panel Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- Panel 1: Speak -->
+        <div class="bg-white rounded-2xl p-4 border-2 border-[#111827] shadow-sm flex flex-col justify-between gap-3">
+          <span class="text-xs font-black text-[#111827]">1. Speak your destination</span>
+          <div class="flex flex-col items-center text-center gap-2 py-2">
+            <div class="w-14 h-14 rounded-full bg-[#DC2626] text-white flex items-center justify-center shadow-btn-red">
+              <span class="material-symbols-outlined text-[24px]">mic</span>
+            </div>
+            <span class="text-xs font-black text-[#111827]">Listening... എനിക്ക് ആലുവ പോകണം</span>
+            <div class="flex gap-1 text-[10px]">
+              <span class="px-2 py-0.5 rounded bg-[#FEF08A] text-[#111827] font-bold">Malayalam</span>
+              <span class="px-2 py-0.5 rounded bg-[#FEE2E2] text-[#DC2626] font-bold">Ernakulam to Aluva</span>
+            </div>
+          </div>
+          <a href="#voice" data-nav-target="voice" class="py-2 rounded-lg bg-[#DC2626] text-white text-[11px] font-black text-center">Open Screen</a>
+        </div>
+
+        <!-- Panel 2: Type -->
+        <div class="bg-white rounded-2xl p-4 border-2 border-[#111827] shadow-sm flex flex-col justify-between gap-3">
+          <span class="text-xs font-black text-[#111827]">2. Type your journey</span>
+          <div class="flex flex-col gap-2">
+            <div class="p-2 rounded-lg bg-[#FFFBEB] border border-[#111827] text-xs font-black text-[#111827]">Ernakulam to Aluva ➔</div>
+            <div class="grid grid-cols-2 gap-1 text-[9px] text-[#4B5563] font-bold">
+              <span class="p-1 rounded bg-[#FEF08A] text-[#111827]">Ernakulam to Aluva</span>
+              <span class="p-1 rounded bg-[#FEF08A] text-[#111827]">Thrissur to Palakkad</span>
+            </div>
+          </div>
+          <a href="#plan" data-nav-target="plan" class="py-2 rounded-lg bg-[#DC2626] text-white text-[11px] font-black text-center">Open Screen</a>
+        </div>
+
+        <!-- Panel 3: RouteLens -->
+        <div class="bg-white rounded-2xl p-4 border-2 border-[#111827] shadow-sm flex flex-col justify-between gap-3">
+          <span class="text-xs font-black text-[#111827]">3. RouteLens OCR</span>
+          <div class="relative h-24 rounded-lg overflow-hidden bg-[#111827] flex items-center justify-center">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCftujLUX-DEGrnqxMF-FI2Raa3aHIIf-xoKrK43sY-WFpfPlzEJNQQk2dmUkUFrYsyLutiozpj1DBgVJ0wPPobdHLuz02EK8K524RvuiwXxjQbDChNQlapG40FZ9KWdSNwBNhLvAp12uSv_5dENdZOLOjUqFuz1Aldf1Kh31yNeFqRK0AaDd91t8O4vcc5gdzhS09we2y-VNYeC2H_p-_cwnHILwAH2uycF-v4bu_P11M8DIFYsSQc" class="w-full h-full object-cover"/>
+            <div class="absolute inset-0 border-2 border-[#FACC15]"></div>
+          </div>
+          <a href="#routelens" data-nav-target="routelens" class="py-2 rounded-lg bg-[#DC2626] text-white text-[11px] font-black text-center">Open Screen</a>
+        </div>
+
+        <!-- Panel 4: Your Journey -->
+        <div class="bg-white rounded-2xl p-4 border-2 border-[#111827] shadow-sm flex flex-col justify-between gap-3">
+          <span class="text-xs font-black text-[#111827]">4. Your Journey</span>
+          <div class="flex flex-col gap-1.5 text-[11px]">
+            <span class="font-black text-[#111827]">Ernakulam South ➔ Aluva</span>
+            <div class="grid grid-cols-2 gap-1 text-[10px] text-center">
+              <span class="p-1 rounded bg-[#FEF08A] font-black text-[#111827]">15 km</span>
+              <span class="p-1 rounded bg-[#FEE2E2] font-black text-[#DC2626]">₹40 Fare</span>
+            </div>
+            <span class="text-[10px] text-[#111827] font-black">● Kalamassery in 12 mins</span>
+          </div>
+          <a href="#journey" data-nav-target="journey" class="py-2 rounded-lg bg-[#111827] text-white text-[11px] font-black text-center">Open Screen</a>
+        </div>
+
+        <!-- Panel 5: Map -->
+        <div class="bg-white rounded-2xl p-4 border-2 border-[#111827] shadow-sm flex flex-col justify-between gap-3">
+          <span class="text-xs font-black text-[#111827]">5. Route Map</span>
+          <div class="h-24 rounded-lg bg-[#FEF08A] flex items-center justify-center p-2 text-center text-xs text-[#111827] font-black border border-[#111827]">
+            Schematic Corridor Line (15 km)
+          </div>
+          <a href="#map" data-nav-target="map" class="py-2 rounded-lg bg-[#111827] text-white text-[11px] font-black text-center">Open Screen</a>
+        </div>
+
+        <!-- Panel 6: Nearby -->
+        <div class="bg-white rounded-2xl p-4 border-2 border-[#111827] shadow-sm flex flex-col justify-between gap-3">
+          <span class="text-xs font-black text-[#111827]">6. Nearby Stops</span>
+          <div class="flex flex-col gap-1 text-[11px]">
+            <span class="font-black text-[#111827]">Ernakulam South (350m)</span>
+            <span class="font-black text-[#111827]">Kaloor (1.2 km)</span>
+            <span class="font-black text-[#111827]">Palarivattom (1.8 km)</span>
+          </div>
+          <a href="#nearby" data-nav-target="nearby" class="py-2 rounded-lg bg-[#111827] text-white text-[11px] font-black text-center">Open Screen</a>
+        </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- VIEW 11: ACCESSIBILITY CENTER (/accessibility)                   -->
+    <!-- ================================================================ -->
+    <section id="view-accessibility" class="hidden flex flex-col gap-6 max-w-3xl mx-auto w-full">
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-[#111827] shadow-card-clean flex flex-col gap-5">
+        <h1 class="text-2xl font-black text-[#111827]">Accessibility Center</h1>
+        <p class="text-xs text-[#4B5563] font-bold -mt-3">Personalize the application for your individual comfort and needs</p>
+
+        <!-- Toggles -->
+        <div class="flex flex-col gap-3 pt-2">
+          <div class="p-4 rounded-2xl bg-[#FFFBEB] border-2 border-[#E5E7EB] flex items-center justify-between">
+            <div>
+              <span class="text-xs font-black text-[#111827] block">Large Text</span>
+              <span class="text-[11px] text-[#4B5563] font-bold">Increases typography size by 110%</span>
+            </div>
+            <button id="toggle-large-text" type="button" class="w-12 h-6 rounded-full bg-[#CBD5E1] transition-colors relative">
+              <span class="toggle-knob w-5 h-5 rounded-full bg-[#111827] absolute top-0.5 left-0.5 shadow-sm transition-transform"></span>
+            </button>
+          </div>
+          <div class="p-4 rounded-2xl bg-[#FFFBEB] border-2 border-[#E5E7EB] flex items-center justify-between">
+            <div>
+              <span class="text-xs font-black text-[#111827] block">High Contrast</span>
+              <span class="text-[11px] text-[#4B5563] font-bold">Stark contrast for low visibility</span>
+            </div>
+            <button id="toggle-high-contrast" type="button" class="w-12 h-6 rounded-full bg-[#CBD5E1] transition-colors relative">
+              <span class="toggle-knob w-5 h-5 rounded-full bg-[#111827] absolute top-0.5 left-0.5 shadow-sm transition-transform"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- VIEW 12: HELP & EMERGENCY (/help)                                -->
+    <!-- ================================================================ -->
+    <section id="view-help" class="hidden flex flex-col gap-6 max-w-3xl mx-auto w-full">
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-[#111827] shadow-card-clean flex flex-col gap-5">
+        <h1 class="text-2xl font-black text-[#111827]">Help & Emergency</h1>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <a href="tel:04712463799" class="p-4 rounded-2xl bg-[#FEF08A] border-2 border-[#111827] flex items-center gap-3 hover:bg-[#FACC15] transition-colors">
+            <span class="material-symbols-outlined text-[#111827] text-[28px]">call</span>
+            <div>
+              <span class="text-xs font-black text-[#111827] block">KSRTC Helpline</span>
+              <span class="text-sm font-black text-[#111827]">0471-2463799</span>
+            </div>
+          </a>
+          <a href="tel:112" class="p-4 rounded-2xl bg-[#FEE2E2] border-2 border-[#DC2626] flex items-center gap-3 hover:bg-[#FECACA] transition-colors">
+            <span class="material-symbols-outlined text-[#DC2626] text-[28px]">emergency</span>
+            <div>
+              <span class="text-xs font-black text-[#DC2626] block">Police / Emergency</span>
+              <span class="text-sm font-black text-[#111827]">112</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- VIEW: DEPOT STAFF MANAGEMENT DASHBOARD (/depot)                 -->
+    <!-- ================================================================ -->
+    <section id="view-depot" class="hidden flex flex-col gap-6 max-w-4xl mx-auto w-full">
+      <!-- Header Banner & Depot Selector -->
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-[#111827] shadow-card-clean flex flex-col gap-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#E5E7EB]">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-[#FFFBEB] border-2 border-[#111827] flex items-center justify-center text-2xl shadow-sm">
+              🏢
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h1 class="text-xl sm:text-2xl font-black text-[#111827]">ഡിപ്പോ ജീവനക്കാരൻ</h1>
+                <span class="px-2.5 py-0.5 rounded-full bg-[#DC2626] text-white text-[10px] font-black uppercase">DEPOT STAFF</span>
+              </div>
+              <p class="text-xs text-[#4B5563] font-bold">KSRTC Station Operations, Live Schedules & Platform Charts</p>
+            </div>
+          </div>
+
+          <!-- Select Depot Dropdown (Populated with 19 KSRTC Depots) -->
+          <div class="flex flex-col gap-1 min-w-[240px]">
+            <label class="text-[10px] font-black text-[#111827] uppercase tracking-wide">Select KSRTC Depot (ഡിപ്പോ തരം തിരിക്കുക)</label>
+            <select id="depot-select-dropdown" class="px-3 py-2.5 rounded-xl bg-[#FFFBEB] border-2 border-[#111827] text-xs font-black text-[#111827] focus:outline-none focus:ring-2 focus:ring-[#DC2626] cursor-pointer" onchange="window.anavandiApp.handleDepotChange(this.value)">
+              <!-- Options populated dynamically -->
+            </select>
+          </div>
+        </div>
+
+        <!-- Depot Overview Stats Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="p-3.5 rounded-2xl bg-[#FFFBEB] border-2 border-[#FDE047] flex flex-col gap-1">
+            <span class="text-[10px] font-black text-[#4B5563] uppercase">Depot Code</span>
+            <span id="depot-stat-code" class="text-base font-black text-[#111827]">EKM</span>
+            <span id="depot-stat-district" class="text-[10px] font-bold text-[#DC2626]">Ernakulam District</span>
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-[#FFFBEB] border-2 border-[#FDE047] flex flex-col gap-1">
+            <span class="text-[10px] font-black text-[#4B5563] uppercase">Active Buses</span>
+            <span id="depot-stat-buses" class="text-base font-black text-[#111827]">160 Fleet Units</span>
+            <span class="text-[10px] font-bold text-[#111827]">Ordinary, Fast, Swift</span>
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-[#FFFBEB] border-2 border-[#FDE047] flex flex-col gap-1">
+            <span class="text-[10px] font-black text-[#4B5563] uppercase">Routes Operated</span>
+            <span id="depot-stat-routes" class="text-base font-black text-[#111827]">75 Routes</span>
+            <span class="text-[10px] font-bold text-[#111827]">Statewide Service</span>
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-[#111827] text-white rounded-2xl flex flex-col justify-between gap-1 shadow-sm">
+            <span class="text-[10px] font-black text-[#FEF08A] uppercase">Platform Sync</span>
+            <span class="text-xs font-black text-white flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-[#FACC15] animate-ping"></span> Live Station Feed
+            </span>
+            <button type="button" class="mt-1 py-1 px-2 rounded-lg bg-[#DC2626] text-white text-[10px] font-black hover:bg-[#B91C1C] transition-colors" onclick="window.anavandiApp.refreshDepotData()">
+              Sync Schedule
+            </button>
+          </div>
+        </div>
+
+        <!-- Live Platform Chart & Notice Publisher -->
+        <div class="flex flex-col gap-3 pt-2">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-black text-[#111827] flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[18px] text-[#DC2626]">departure_board</span>
+              Platform Departure Schedule (പ്ലാറ്റ്‌ഫോം സമയക്രമം)
+            </h3>
+            <span class="text-[11px] font-bold text-[#4B5563]">Verified KSRTC API Data</span>
+          </div>
+
+          <!-- Schedule List -->
+          <div id="depot-schedules-list" class="flex flex-col gap-2">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- VIEW: CREW / DRIVER & CONDUCTOR PORTAL (/crew)                  -->
+    <!-- ================================================================ -->
+    <section id="view-crew" class="hidden flex flex-col gap-6 max-w-3xl mx-auto w-full">
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-[#111827] shadow-card-clean flex flex-col gap-5">
+        <div class="flex items-center justify-between gap-3 pb-4 border-b border-[#E5E7EB]">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-[#FFFBEB] border-2 border-[#111827] flex items-center justify-center text-2xl shadow-sm">
+              👨‍✈️
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h1 class="text-xl sm:text-2xl font-black text-[#111827]">ഡ്രൈവർ / കണ്ടക്ടർ</h1>
+                <span class="px-2.5 py-0.5 rounded-full bg-[#111827] text-white text-[10px] font-black uppercase">CREW PORTAL</span>
+              </div>
+              <p class="text-xs text-[#4B5563] font-bold">Duty Roster, Waypoint Logging & Trip Sheet Operations</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Duty Roster Card -->
+        <div class="p-4 rounded-2xl bg-[#FFFBEB] border-2 border-[#111827] flex flex-col gap-3 shadow-sm">
+          <div class="flex items-center justify-between">
+            <span class="px-2.5 py-1 rounded-full bg-[#DC2626] text-white text-[10px] font-black uppercase">
+              Active Duty #DUTY-409
+            </span>
+            <span class="text-xs font-mono font-black text-[#111827]">Vehicle: KL 15 0007 (Fast Passenger)</span>
+          </div>
+
+          <div class="flex items-center justify-between pt-1">
+            <div>
+              <span class="text-[10px] text-[#4B5563] font-bold uppercase block">Route</span>
+              <span class="text-sm font-black text-[#111827]">Ernakulam South ➔ Aluva (Route 42)</span>
+            </div>
+            <div class="text-right">
+              <span class="text-[10px] text-[#4B5563] font-bold uppercase block">Scheduled Departure</span>
+              <span class="text-sm font-black text-[#DC2626]">09:05 AM</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Waypoint Logger -->
+        <div class="flex flex-col gap-3">
+          <h3 class="text-sm font-black text-[#111827] flex items-center justify-between">
+            <span>Trip Sheet Waypoints (വഴിനിരീക്ഷണം)</span>
+            <span id="crew-current-stop-badge" class="text-xs font-black text-[#DC2626] bg-[#FFFBEB] px-2.5 py-0.5 rounded-full border border-[#FDE047]">Stop 1 of 4</span>
+          </h3>
+
+          <div class="p-4 rounded-2xl bg-white border-2 border-[#111827] flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="text-xs font-black text-[#4B5563]">Current Waypoint:</span>
+                <h4 id="crew-waypoint-name" class="text-base font-black text-[#111827]">Ernakulam South KSRTC</h4>
+              </div>
+              <button id="crew-mark-arrived-btn" type="button" class="px-4 py-2.5 rounded-xl bg-[#DC2626] hover:bg-[#B91C1C] text-white font-black text-xs shadow-btn-red transition-all cursor-pointer" onclick="window.anavandiApp.markCrewWaypointArrived()">
+                Mark Arrived ➔
+              </button>
+            </div>
+          </div>
+
+          <!-- Passenger Count Tally -->
+          <div class="grid grid-cols-3 gap-2 pt-2">
+            <div class="p-3 rounded-xl bg-[#FFFBEB] border border-[#111827] text-center">
+              <span class="text-[10px] font-black text-[#4B5563] uppercase block">Full Tickets</span>
+              <span id="tally-full" class="text-lg font-black text-[#111827]">42</span>
+            </div>
+            <div class="p-3 rounded-xl bg-[#FFFBEB] border border-[#111827] text-center">
+              <span class="text-[10px] font-black text-[#4B5563] uppercase block">Concession / Half</span>
+              <span id="tally-half" class="text-lg font-black text-[#111827]">8</span>
+            </div>
+            <div class="p-3 rounded-xl bg-[#FFFBEB] border border-[#111827] text-center">
+              <span class="text-[10px] font-black text-[#4B5563] uppercase block">Standees</span>
+              <span id="tally-standees" class="text-lg font-black text-[#DC2626]">5</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- VIEW: ADMIN TRANSPORT DATA AUDIT & FLEET SYNC (/admin)          -->
+    <!-- ================================================================ -->
+    <section id="view-admin" class="hidden flex flex-col gap-6 max-w-4xl mx-auto w-full">
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-[#111827] shadow-card-clean flex flex-col gap-5">
+        <div class="flex items-center justify-between gap-3 pb-4 border-b border-[#E5E7EB]">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-[#FFFBEB] border-2 border-[#111827] flex items-center justify-center text-2xl shadow-sm">
+              🛡️
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h1 class="text-xl sm:text-2xl font-black text-[#111827]">ADMIN & VERIFY</h1>
+                <span class="px-2.5 py-0.5 rounded-full bg-[#111827] text-[#FEF08A] text-[10px] font-black uppercase">SYSTEM AUDIT</span>
+              </div>
+              <p class="text-xs text-[#4B5563] font-bold">Route Validation, Transport Data Audit & Statewide GTFS Sync</p>
+            </div>
+          </div>
+
+          <button type="button" class="px-4 py-2 rounded-xl bg-[#DC2626] text-white text-xs font-black hover:bg-[#B91C1C] transition-all shadow-btn-red" onclick="window.anavandiApp.runAdminFleetAudit()">
+            Run Full Fleet Sync
+          </button>
+        </div>
+
+        <!-- 14 Districts Data Matrix -->
+        <div class="flex flex-col gap-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-black text-[#111827]">Kerala Statewide District Coverage (14 Districts)</h3>
+            <span class="text-xs font-bold text-[#DC2626]">100% Operational</span>
+          </div>
+
+          <div id="admin-district-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-bold">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <!-- Audit Log Summary -->
+        <div class="p-4 rounded-2xl bg-[#111827] text-white flex flex-col gap-2 shadow-sm">
+          <span class="text-xs font-black text-[#FEF08A] flex items-center gap-1">
+            <span class="material-symbols-outlined text-[16px]">verified</span> Real-time Transport API Data Audit Status
+          </span>
+          <p id="admin-audit-status-text" class="text-xs text-gray-300 font-mono">
+            ● 19 KSRTC Depots Verified | 59 Bus Stands Indexed | 20 State Routes Operational | 0 Data Anomaly Detected.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== FLOATING AI ASSISTANT TRIGGER BUTTON ==================== -->
+  <aside aria-label="Aanavandi AI Assistant" class="fixed bottom-20 right-4 lg:bottom-6 lg:right-6 z-40 flex flex-col items-end gap-2 pointer-events-auto">
+    <button id="floating-ai-trigger-btn" type="button" class="group flex items-center gap-2.5 px-4 py-3 rounded-full bg-[#111827] text-white hover:bg-[#DC2626] shadow-modal-pop border-2 border-[#FEF08A] hover:border-white transition-all transform hover:scale-105 active:scale-95 cursor-pointer" onclick="window.anavandiApp.toggleAiAssistant()" title="Chat with Aanavandi AI Transit Assistant">
+      <div class="relative flex items-center justify-center">
+        <span class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-[#10B981] ring-2 ring-[#111827] animate-pulse"></span>
+        <span class="material-symbols-outlined text-[24px] text-[#FEF08A] group-hover:text-white transition-transform group-hover:rotate-12">smart_toy</span>
+      </div>
+      <div class="flex flex-col text-left">
+        <div class="flex items-center gap-1.5">
+          <span class="text-xs font-black tracking-tight leading-none text-white">Aanavandi AI</span>
+          <span class="px-1.5 py-0.2 rounded bg-[#DC2626] group-hover:bg-[#111827] text-[8px] font-black uppercase text-white">Live</span>
+        </div>
+        <span class="text-[9px] font-bold text-[#FEF08A] group-hover:text-white leading-tight">Gemini Transit Assistant</span>
+      </div>
+    </button>
+  </aside>
+
+  <!-- ==================== ANAVANDI AI ASSISTANT CHAT DRAWER ==================== -->
+  <div id="ai-chat-drawer" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-end sm:justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-xs transition-opacity duration-200">
+    <div class="relative w-full sm:max-w-lg bg-white rounded-t-3xl sm:rounded-3xl shadow-modal-pop border-2 border-[#111827] flex flex-col h-[85vh] sm:h-[680px] max-h-[92vh] overflow-hidden animate-scale-in">
+      
+      <!-- AI Header -->
+      <div class="bg-[#111827] text-white px-4 py-3.5 flex items-center justify-between border-b-2 border-[#FEF08A] shrink-0">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-full bg-[#DC2626] border-2 border-[#FEF08A] flex items-center justify-center text-white shadow-sm shrink-0">
+            <span class="material-symbols-outlined text-[22px]">smart_toy</span>
+          </div>
+          <div class="flex flex-col">
+            <div class="flex items-center gap-2">
+              <h2 class="text-sm font-black text-white tracking-tight">Aanavandi AI Assistant</h2>
+              <span id="ai-drawer-model-badge" class="px-2 py-0.5 rounded-full bg-[#FFFBEB] text-[#111827] text-[9px] font-black">Gemini 1.5 Flash</span>
+            </div>
+            <p class="text-[10px] text-[#FEF08A] font-bold">ആനവണ്ടി ഇൻഡിക് യാത്രാ സഹായി • Multilingual KSRTC Guide</p>
+          </div>
+        </div>
+
+        <!-- Header Actions -->
+        <div class="flex items-center gap-1.5">
+          <!-- XAI Pipeline Toggle Button -->
+          <button id="ai-drawer-xai-btn" type="button" class="px-2.5 py-1 rounded-xl bg-[#1F2937] hover:bg-[#374151] text-[#FEF08A] hover:text-white text-[10px] font-bold border border-white/20 transition-all flex items-center gap-1 cursor-pointer" onclick="window.anavandiApp.openXaiInspector()" title="View Explainable AI Pipeline">
+            <span class="material-symbols-outlined text-[13px]">psychology</span>
+            <span class="hidden sm:inline">XAI Trace</span>
+          </button>
+          
+          <!-- Clear Chat -->
+          <button type="button" class="w-8 h-8 rounded-xl bg-[#1F2937] hover:bg-[#DC2626] text-white flex items-center justify-center transition-all text-xs" onclick="window.anavandiApp.clearAiChat()" title="Clear Chat History">
+            <span class="material-symbols-outlined text-[16px]">delete_sweep</span>
+          </button>
+
+          <!-- Close Drawer -->
+          <button type="button" class="w-8 h-8 rounded-xl bg-[#1F2937] hover:bg-[#DC2626] text-white flex items-center justify-center transition-all font-bold text-xs" onclick="window.anavandiApp.closeAiAssistant()" title="Close Assistant">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Suggestion Chips Bar -->
+      <div class="px-3.5 py-2 bg-[#FFFBEB] border-b border-[#FDE047] flex items-center gap-1.5 overflow-x-auto shrink-0 select-none">
+        <span class="text-[10px] font-black text-[#DC2626] uppercase shrink-0">Try:</span>
+        <button type="button" class="ai-chip px-2.5 py-1 rounded-full bg-white hover:bg-[#FEF08A] text-[#111827] border border-[#111827] text-[11px] font-bold shrink-0 shadow-xs transition-all active:scale-95" onclick="window.anavandiApp.handleAiQuickPrompt('എനിക്ക് ആലുവയ്ക്ക് ബസ് വേണം. റൂട്ട് 42 വിവരങ്ങൾ തരുമോ?')">
+          🚌 എറണാകുളം ➔ ആലുവ
+        </button>
+        <button type="button" class="ai-chip px-2.5 py-1 rounded-full bg-white hover:bg-[#FEF08A] text-[#111827] border border-[#111827] text-[11px] font-bold shrink-0 shadow-xs transition-all active:scale-95" onclick="window.anavandiApp.handleAiQuickPrompt('What is the minimum fare and student concession pass rules in KSRTC?')">
+          🎫 Fares & Passes
+        </button>
+        <button type="button" class="ai-chip px-2.5 py-1 rounded-full bg-white hover:bg-[#FEF08A] text-[#111827] border border-[#111827] text-[11px] font-bold shrink-0 shadow-xs transition-all active:scale-95" onclick="window.anavandiApp.handleAiQuickPrompt('Tell me about KSRTC Minnal and SWIFT Gajaraj services and timings.')">
+          ⚡ Minnal & SWIFT
+        </button>
+        <button type="button" class="ai-chip px-2.5 py-1 rounded-full bg-white hover:bg-[#FEF08A] text-[#111827] border border-[#111827] text-[11px] font-bold shrink-0 shadow-xs transition-all active:scale-95" onclick="window.anavandiApp.handleAiQuickPrompt('തൃശ്ശൂരിലേക്ക് അടുത്ത ഫാസ്റ്റ് പാസഞ്ചർ ബസ് എപ്പോഴാണ്?')">
+          🕒 തൃശ്ശൂർ ബസ്
+        </button>
+        <button type="button" class="ai-chip px-2.5 py-1 rounded-full bg-white hover:bg-[#FEF08A] text-[#111827] border border-[#111827] text-[11px] font-bold shrink-0 shadow-xs transition-all active:scale-95" onclick="window.anavandiApp.handleAiQuickPrompt('KSRTC 24/7 Helpline numbers and emergency support')">
+          🛡️ Helplines
+        </button>
+      </div>
+
+      <!-- Chat Feed / Message History -->
+      <div id="ai-chat-messages-container" class="flex-1 p-4 overflow-y-auto flex flex-col gap-3.5 bg-[#FFFDF0]">
+        <!-- Welcome Initial Message -->
+        <div class="flex items-start gap-2.5 max-w-[92%]">
+          <div class="w-8 h-8 rounded-full bg-[#DC2626] border border-[#111827] flex items-center justify-center text-white shrink-0 shadow-xs">
+            <span class="material-symbols-outlined text-[18px]">smart_toy</span>
+          </div>
+          <div class="flex flex-col gap-1">
+            <div class="p-3.5 rounded-2xl rounded-tl-none bg-white border-2 border-[#111827] text-xs font-medium text-[#111827] shadow-sm leading-relaxed">
+              <p class="font-black text-sm text-[#111827] mb-1">നമസ്കാരം! ഞാൻ ആനവണ്ടി എഐ അസിസ്റ്റന്റ് ആണ്. 🚌</p>
+              <p>നിങ്ങളുടെ യാത്രാ റൂട്ടുകൾ, ടിക്കറ്റ് നിരക്കുകൾ, ബസ് സമയങ്ങൾ, അല്ലെങ്കിൽ കൺസഷൻ വിവരങ്ങൾ എന്നിവയെക്കുറിച്ച് എന്നോട് ചോദിക്കാം. Speak in Malayalam, English, Hindi, Tamil, or Kannada!</p>
+            </div>
+            <div class="flex items-center gap-2 pl-1">
+              <span class="text-[9px] text-[#6B7280] font-bold">Aanavandi AI • Verified KSRTC Guide</span>
+              <button type="button" class="text-[11px] text-[#DC2626] hover:underline font-bold flex items-center gap-0.5" onclick="window.anavandiApp.speakAiMessage('നമസ്കാരം! ഞാൻ ആനവണ്ടി എഐ അസിസ്റ്റന്റ് ആണ്. നിങ്ങളുടെ യാത്രാ സംശയങ്ങൾ എന്നോട് ചോദിക്കാം.')" title="Listen in Malayalam">
+                <span class="material-symbols-outlined text-[14px]">volume_up</span> Listen
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Thinking / Generating Live Indicator -->
+      <div id="ai-chat-thinking-indicator" class="hidden px-4 py-2 bg-white/90 border-t border-[#E5E7EB] flex items-center gap-2 shrink-0">
+        <span class="material-symbols-outlined text-[16px] text-[#DC2626] animate-spin">cyclone</span>
+        <span class="text-xs font-bold text-[#111827] animate-pulse">Aanavandi Gemini AI is thinking...</span>
+      </div>
+
+      <!-- Chat Input Area -->
+      <form id="ai-chat-form" class="p-3 bg-white border-t-2 border-[#111827] flex flex-col gap-2 shrink-0">
+        <div class="relative flex items-center rounded-2xl bg-[#FFFBEB] border-2 border-[#111827] p-1.5 focus-within:border-[#DC2626] shadow-sm">
+          <!-- Voice Mic Dictation Button -->
+          <button id="ai-chat-mic-btn" type="button" class="w-10 h-10 rounded-xl bg-white hover:bg-[#FEF08A] text-[#DC2626] border border-[#111827]/30 flex items-center justify-center shrink-0 transition-colors cursor-pointer" onclick="window.anavandiApp.startAiVoiceDictation()" title="Speak your query">
+            <span class="material-symbols-outlined text-[20px]">mic</span>
+          </button>
+          
+          <input id="ai-chat-input" type="text" placeholder="Ask anything... എനിക്ക് ആലുവ പോകണം / Route 42 fare?" class="flex-1 bg-transparent px-3 py-2 text-xs font-bold text-[#111827] focus:outline-none placeholder-[#9CA3AF]"/>
+          
+          <!-- Send Button -->
+          <button type="submit" class="w-10 h-10 rounded-xl bg-[#DC2626] text-white flex items-center justify-center hover:bg-[#B91C1C] active:scale-95 shrink-0 transition-colors shadow-btn-red cursor-pointer" title="Send Question">
+            <span class="material-symbols-outlined text-[20px]">send</span>
+          </button>
+        </div>
+
+        <div class="flex items-center justify-between px-1 text-[10px] text-[#4B5563] font-bold">
+          <span class="flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#10B981]"></span>
+            <span>Multilingual Indic Mode Active</span>
+          </span>
+          <button type="button" class="text-[#DC2626] hover:underline" onclick="window.anavandiApp.openApiKeyModal()">Change AI Model</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== EXPLAINABLE AI (XAI) REASONING INSPECTOR DRAWER ==================== -->
+  <div id="ai-explainer-drawer" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-200">
+    <div class="relative w-full max-w-2xl bg-white rounded-3xl p-6 sm:p-7 shadow-modal-pop border-2 border-[#111827] flex flex-col gap-4 animate-scale-in max-h-[90vh] overflow-y-auto">
+      
+      <!-- XAI Header -->
+      <div class="flex items-center justify-between pb-3 border-b-2 border-[#111827]">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-[#FFFBEB] border-2 border-[#111827] flex items-center justify-center text-[#DC2626] shadow-xs">
+            <span class="material-symbols-outlined text-[26px]">psychology</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-lg font-black text-[#111827]">Explainable AI (XAI) Pipeline Trace</h2>
+              <span id="xai-model-badge" class="px-2 py-0.5 rounded-full bg-[#111827] text-[#FEF08A] text-[9px] font-black">Gemini Multimodal</span>
+            </div>
+            <p class="text-xs text-[#DC2626] font-bold">8-Step Transparent Indic Transit Reasoning Engine</p>
+          </div>
+        </div>
+        <button id="ai-drawer-close" type="button" class="w-8 h-8 rounded-full bg-[#F3F4F6] hover:bg-[#E5E7EB] text-[#111827] flex items-center justify-center font-bold text-sm" onclick="window.anavandiApp.closeXaiInspector()">✕</button>
+      </div>
+
+      <!-- Active Query & Confidence Banner -->
+      <div class="p-3.5 rounded-2xl bg-[#FFFBEB] border-2 border-[#FDE047] flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-xs">
+        <div>
+          <span class="text-[10px] font-black text-[#4B5563] uppercase block">Current Analyzed Query:</span>
+          <span id="xai-user-query" class="text-sm font-black text-[#111827]">“എനിക്ക് ആലുവ പോകണം”</span>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <span class="px-2.5 py-1 rounded-full bg-[#111827] text-white text-[10px] font-black flex items-center gap-1">
+            <span class="material-symbols-outlined text-[13px] text-[#FEF08A]">verified</span>
+            <span id="xai-confidence-pct">99% Confidence</span>
+          </span>
+          <span id="xai-source-label" class="px-2.5 py-1 rounded-full bg-[#DC2626] text-white text-[10px] font-black">
+            Google Gemini
+          </span>
+        </div>
+      </div>
+
+      <!-- 8-Step Breakdown List -->
+      <div class="flex flex-col gap-2.5">
+        <h3 class="text-xs font-black text-[#111827] uppercase tracking-wide">8-Step Cognitive Execution Pipeline</h3>
+        
+        <div id="xai-steps-container" class="grid grid-cols-1 gap-2">
+          <!-- Step items rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Extracted Entities Summary -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-left pt-2 border-t border-[#E5E7EB]">
+        <div class="p-2.5 rounded-xl bg-white border border-[#111827]">
+          <span class="text-[9px] font-bold text-[#4B5563] uppercase block">Detected Lang</span>
+          <span id="xai-entity-lang" class="text-xs font-black text-[#111827]">Malayalam (ml)</span>
+        </div>
+        <div class="p-2.5 rounded-xl bg-white border border-[#111827]">
+          <span class="text-[9px] font-bold text-[#4B5563] uppercase block">Intent</span>
+          <span id="xai-entity-intent" class="text-xs font-black text-[#DC2626]">Plan Journey</span>
+        </div>
+        <div class="p-2.5 rounded-xl bg-white border border-[#111827]">
+          <span class="text-[9px] font-bold text-[#4B5563] uppercase block">Origin Hub</span>
+          <span id="xai-entity-origin" class="text-xs font-black text-[#111827]">Ernakulam South</span>
+        </div>
+        <div class="p-2.5 rounded-xl bg-white border border-[#111827]">
+          <span class="text-[9px] font-bold text-[#4B5563] uppercase block">Destination</span>
+          <span id="xai-entity-dest" class="text-xs font-black text-[#111827]">Aluva Terminus</span>
+        </div>
+      </div>
+
+      <!-- Reassurance Message Box -->
+      <div class="p-3 rounded-xl bg-[#111827] text-white text-xs font-medium flex items-center justify-between gap-2 shadow-sm">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-[#FEF08A] text-[18px]">chat</span>
+          <span id="xai-reassurance-text">“നിങ്ങളുടെ യാത്ര എറണാകുളത്തുനിന്ന് ആരംഭിച്ച് ആലുവയിൽ സുരക്ഷിതമായി പൂർത്തിയാകും.”</span>
+        </div>
+        <button type="button" class="px-3 py-1 rounded-lg bg-[#DC2626] text-white font-black text-[10px] hover:bg-[#B91C1C] shrink-0" onclick="window.anavandiApp.closeXaiInspector()">Done</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== MOBILE BOTTOM TAB NAVIGATION BAR ==================== -->
+  <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t-2 border-[#111827] px-3 py-2 flex items-center justify-around shadow-[0_-2px_10px_rgba(0,0,0,0.08)]">
+    <a href="#home" data-nav-target="home" class="flex flex-col items-center gap-0.5 text-[#111827]">
+      <span class="material-symbols-outlined text-[20px]">home</span>
+      <span class="text-[10px] font-black">Home</span>
+    </a>
+    <a href="#plan" data-nav-target="plan" class="flex flex-col items-center gap-0.5 text-[#4B5563] hover:text-[#DC2626]">
+      <span class="material-symbols-outlined text-[20px]">map</span>
+      <span class="text-[10px] font-bold">Plan</span>
+    </a>
+    <a href="#routelens" data-nav-target="routelens" class="flex flex-col items-center gap-0.5 text-[#4B5563] hover:text-[#DC2626]">
+      <span class="material-symbols-outlined text-[20px]">photo_camera</span>
+      <span class="text-[10px] font-bold">Scan</span>
+    </a>
+    <button type="button" class="flex flex-col items-center gap-0.5 text-[#DC2626]" onclick="window.anavandiApp.openAiAssistant()">
+      <span class="material-symbols-outlined text-[20px]">smart_toy</span>
+      <span class="text-[10px] font-black">AI Guide</span>
+    </button>
+    <a href="#nearby" data-nav-target="nearby" class="flex flex-col items-center gap-0.5 text-[#4B5563] hover:text-[#DC2626]">
+      <span class="material-symbols-outlined text-[20px]">near_me</span>
+      <span class="text-[10px] font-bold">Nearby</span>
+    </a>
+    <a href="#showcase" data-nav-target="showcase" class="flex flex-col items-center gap-0.5 text-[#4B5563] hover:text-[#DC2626]">
+      <span class="material-symbols-outlined text-[20px]">grid_view</span>
+      <span class="text-[10px] font-bold">Mockups</span>
+    </a>
+  </nav>
+
+  <!-- Application Bootstrap -->
+  <script type="module">
+    import './src/app.js';
+  </script>
+</body>
+</html>
