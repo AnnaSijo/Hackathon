@@ -3,11 +3,9 @@
   "version": "1.0.0",
   "type": "module",
   "description": "ANAVANDI CONNECT — Multilingual passenger-facing public transport assistant for Kerala.",
-  "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js",
-    "build": "echo 'Static build ready'"
+    "dev": "node server.js"
   },
   "keywords": [
     "ksrtc",
