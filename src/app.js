@@ -1149,8 +1149,17 @@ class AnavandiApp {
     const input = document.getElementById('journey-dest-input');
     if (input) input.placeholder = getTranslation(lang, 'naturalLanguageHint');
 
-    const submitBtn = view.querySelector('button[type="submit"] span:last-child');
-    if (submitBtn) submitBtn.textContent = getTranslation(lang, 'findRouteBtn');
+    const ctaText = document.getElementById('plan-cta-text');
+    if (ctaText) ctaText.textContent = getTranslation(lang, 'findRouteBtn');
+
+    const examplesTitle = document.getElementById('plan-examples-title');
+    if (examplesTitle) examplesTitle.textContent = getTranslation(lang, 'sampleVoicePrompts');
+
+    const targetLabel = document.getElementById('plan-target-label');
+    if (targetLabel) targetLabel.textContent = getTranslation(lang, 'understoodTo');
+
+    const proceedBtn = document.getElementById('btn-confirm-understanding');
+    if (proceedBtn) proceedBtn.textContent = getTranslation(lang, 'confirmAndProceed');
   }
 
   renderVoiceView(state) {

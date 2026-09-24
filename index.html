@@ -581,7 +581,7 @@
     <!-- ================================================================ -->
     <section id="view-voice" class="hidden flex flex-col gap-6 max-w-2xl mx-auto w-full">
       <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-[#111827] shadow-card-clean flex flex-col items-center text-center gap-6">
-        <h1 class="text-2xl font-black text-[#111827]">Speak your destination</h1>
+        <h1 class="text-2xl font-black text-[#111827]">ലക്ഷ്യസ്ഥാനം പറയൂ (Speak destination)</h1>
         
         <!-- Large Pulsing Microphone -->
         <div class="relative my-2 flex items-center justify-center">
@@ -593,7 +593,7 @@
 
         <!-- Waveform & Transcript -->
         <div class="flex flex-col items-center gap-2 w-full">
-          <span class="text-xs font-black text-[#DC2626] uppercase tracking-wider" id="voice-status-indicator">Listening...</span>
+          <span class="text-xs font-black text-[#DC2626] uppercase tracking-wider" id="voice-status-indicator">കേൾക്കുന്നു (Listening)...</span>
           <div id="voice-waveform-container" class="h-8 flex items-center gap-1.5 justify-center py-1">
             <span class="wave-bar w-1.5 bg-[#DC2626] rounded-full h-2"></span>
             <span class="wave-bar w-1.5 bg-[#FACC15] rounded-full h-4"></span>
@@ -612,15 +612,15 @@
           <div class="p-4 rounded-2xl bg-[#FFFBEB] border-2 border-[#FDE047] flex items-center gap-2.5">
             <span class="material-symbols-outlined text-[#111827] text-[22px]">check_circle</span>
             <div class="flex flex-col">
-              <span class="text-[10px] text-[#4B5563] uppercase font-bold">Detected language</span>
-              <span id="voice-detected-lang" class="text-sm font-black text-[#111827]">Malayalam</span>
+              <span class="text-[10px] text-[#4B5563] uppercase font-bold">കണ്ടെത്തിയ ഭാഷ</span>
+              <span id="voice-detected-lang" class="text-sm font-black text-[#111827]">മലയാളം</span>
             </div>
           </div>
           <div class="p-4 rounded-2xl bg-[#FFFBEB] border-2 border-[#DC2626] flex items-center gap-2.5">
             <span class="material-symbols-outlined text-[#DC2626] text-[22px]">check_circle</span>
             <div class="flex flex-col">
-              <span class="text-[10px] text-[#4B5563] uppercase font-bold">Recognized request</span>
-              <span id="voice-recognized-target" class="text-sm font-black text-[#DC2626]">Ernakulam to Aluva</span>
+              <span class="text-[10px] text-[#4B5563] uppercase font-bold">തിരിച്ചറിഞ്ഞ അഭ്യർത്ഥന</span>
+              <span id="voice-recognized-target" class="text-sm font-black text-[#DC2626]">എറണാകുളം ➔ ആലുവ</span>
             </div>
           </div>
         </div>
@@ -628,10 +628,10 @@
         <!-- Action Buttons -->
         <div class="grid grid-cols-2 gap-3 w-full max-w-lg">
           <button id="voice-confirm-btn" type="button" class="py-3.5 px-4 rounded-xl bg-[#DC2626] text-white font-black text-xs shadow-btn-red hover:bg-[#B91C1C] active:scale-95 transition-colors">
-            Confirm
+            സ്ഥിരീകരിക്കുക (Confirm)
           </button>
           <button id="voice-retry-btn" type="button" class="py-3.5 px-4 rounded-xl bg-[#F3F4F6] hover:bg-[#E5E7EB] text-[#111827] font-black text-xs border border-[#111827] active:scale-95 transition-colors">
-            Speak Again
+            വീണ്ടും സംസാരിക്കുക
           </button>
         </div>
       </div>
@@ -642,13 +642,13 @@
     <!-- ================================================================ -->
     <section id="view-plan" class="hidden flex flex-col gap-6 max-w-2xl mx-auto w-full">
       <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-[#111827] shadow-card-clean flex flex-col gap-5">
-        <h1 class="text-2xl font-black text-[#111827]">Type your journey</h1>
+        <h1 class="text-2xl font-black text-[#111827]">യാത്രാ ആസൂത്രണം (Type your journey)</h1>
 
         <!-- Search Input with Send Button -->
         <form id="route-planner-form" class="flex flex-col gap-4">
           <div class="relative flex items-center rounded-2xl bg-white border-2 border-[#111827] p-1.5 focus-within:border-[#DC2626] shadow-sm">
-            <input id="journey-dest-input" type="text" class="w-full bg-transparent px-4 py-2.5 text-base font-bold text-[#111827] focus:outline-none placeholder-[#9CA3AF]" value="Ernakulam to Aluva" placeholder="e.g. Ernakulam to Aluva"/>
-            <button type="submit" class="w-11 h-11 rounded-xl bg-[#DC2626] text-white flex items-center justify-center hover:bg-[#B91C1C] active:scale-95 shrink-0 transition-colors shadow-sm">
+            <input id="journey-dest-input" type="text" class="w-full bg-transparent px-4 py-2.5 text-base font-bold text-[#111827] focus:outline-none placeholder-[#9CA3AF]" value="എറണാകുളത്ത് നിന്ന് ആലുവ" placeholder="ഉദാഹരണത്തിന്: എറണാകുളം ➔ ആലുവ"/>
+            <button type="submit" aria-label="Search" class="w-11 h-11 rounded-xl bg-[#DC2626] text-white flex items-center justify-center hover:bg-[#B91C1C] active:scale-95 shrink-0 transition-colors shadow-sm">
               <span class="material-symbols-outlined text-[22px]">send</span>
             </button>
           </div>
@@ -658,35 +658,35 @@
 
           <!-- Example Pills -->
           <div class="flex flex-col gap-2 pt-1">
-            <span class="text-xs font-black text-[#111827]">Try these examples</span>
+            <span id="plan-examples-title" class="text-xs font-black text-[#111827]">ഇവ പരീക്ഷിക്കൂ:</span>
             <div class="grid grid-cols-2 gap-2.5">
-              <button type="button" class="p-3 rounded-xl bg-[#FFFBEB] hover:bg-[#FEF08A] border-2 border-[#FDE047] text-xs font-black text-[#111827] text-center active:scale-95 transition-colors" onclick="window.anavandiApp.fillDestination('Ernakulam to Aluva')">
-                Ernakulam to Aluva
+              <button type="button" class="p-3 rounded-xl bg-[#FFFBEB] hover:bg-[#FEF08A] border-2 border-[#FDE047] text-xs font-black text-[#111827] text-center active:scale-95 transition-colors" onclick="window.anavandiApp.fillDestination('എറണാകുളത്ത് നിന്ന് ആലുവ')">
+                എറണാകുളം ➔ ആലുവ
               </button>
-              <button type="button" class="p-3 rounded-xl bg-[#FFFBEB] hover:bg-[#FEF08A] border-2 border-[#FDE047] text-xs font-black text-[#111827] text-center active:scale-95 transition-colors" onclick="window.anavandiApp.fillDestination('Thrissur to Palakkad')">
-                Thrissur to Palakkad
+              <button type="button" class="p-3 rounded-xl bg-[#FFFBEB] hover:bg-[#FEF08A] border-2 border-[#FDE047] text-xs font-black text-[#111827] text-center active:scale-95 transition-colors" onclick="window.anavandiApp.fillDestination('തൃശ്ശൂരിൽ നിന്ന് പാലക്കാട്')">
+                തൃശ്ശൂർ ➔ പാലക്കാട്
               </button>
-              <button type="button" class="p-3 rounded-xl bg-[#FFFBEB] hover:bg-[#FEF08A] border-2 border-[#FDE047] text-xs font-black text-[#111827] text-center active:scale-95 transition-colors" onclick="window.anavandiApp.fillDestination('Trivandrum to Munnar')">
-                Trivandrum to Munnar
+              <button type="button" class="p-3 rounded-xl bg-[#FFFBEB] hover:bg-[#FEF08A] border-2 border-[#FDE047] text-xs font-black text-[#111827] text-center active:scale-95 transition-colors" onclick="window.anavandiApp.fillDestination('തിരുവനന്തപുരത്ത് നിന്ന് മൂന്നാർ')">
+                തിരുവനന്തപുരം ➔ മൂന്നാർ
               </button>
-              <button type="button" class="p-3 rounded-xl bg-[#FFFBEB] hover:bg-[#FEF08A] border-2 border-[#FDE047] text-xs font-black text-[#111827] text-center active:scale-95 transition-colors" onclick="window.anavandiApp.fillDestination('Kozhikode to Manjeri')">
-                Kozhikode to Manjeri
+              <button type="button" class="p-3 rounded-xl bg-[#FFFBEB] hover:bg-[#FEF08A] border-2 border-[#FDE047] text-xs font-black text-[#111827] text-center active:scale-95 transition-colors" onclick="window.anavandiApp.fillDestination('കോഴിക്കോട് നിന്ന് മഞ്ചേരി')">
+                കോഴിക്കോട് ➔ മഞ്ചേരി
               </button>
             </div>
           </div>
 
           <!-- Plan My Journey Red CTA Button -->
-          <button type="submit" class="mt-2 min-h-[50px] py-3.5 px-4 rounded-xl bg-[#DC2626] text-white font-black text-sm shadow-btn-red hover:bg-[#B91C1C] active:scale-95 transition-colors flex items-center justify-center gap-2">
+          <button id="plan-submit-cta-btn" type="submit" class="mt-2 min-h-[50px] py-3.5 px-4 rounded-xl bg-[#DC2626] text-white font-black text-sm shadow-btn-red hover:bg-[#B91C1C] active:scale-95 transition-colors flex items-center justify-center gap-2">
             <span class="material-symbols-outlined text-[20px]">map</span>
-            <span>Plan My Journey</span>
+            <span id="plan-cta-text">റൂട്ട് കണ്ടെത്തുക (Find Verified Route)</span>
           </button>
         </form>
 
         <!-- Understanding intermediate card -->
         <div id="plan-understanding-card" class="hidden bg-[#FEF08A] border-2 border-[#111827] p-4 rounded-2xl flex flex-col gap-2">
           <div class="flex items-center justify-between text-xs">
-            <span class="font-black text-[#111827]">Target: <strong id="understood-to-val" class="text-[#DC2626]">Aluva</strong></span>
-            <button id="btn-confirm-understanding" type="button" class="px-4 py-1.5 rounded-lg bg-[#DC2626] text-white font-black text-xs shadow-sm">Proceed</button>
+            <span class="font-black text-[#111827]"><span id="plan-target-label">ലക്ഷ്യസ്ഥാനം:</span> <strong id="understood-to-val" class="text-[#DC2626]">ആലുവ</strong></span>
+            <button id="btn-confirm-understanding" type="button" class="px-4 py-1.5 rounded-lg bg-[#DC2626] text-white font-black text-xs shadow-sm">തുടരുക (Proceed)</button>
           </div>
         </div>
       </div>
