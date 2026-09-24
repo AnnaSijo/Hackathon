@@ -946,7 +946,7 @@
     <!-- ================================================================ -->
     <section id="view-map" class="hidden flex flex-col gap-6 max-w-4xl mx-auto w-full">
       <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-[#111827] shadow-card-clean flex flex-col gap-5">
-        <h1 class="text-2xl font-black text-[#111827]">Route Map</h1>
+        <h1 class="text-2xl font-black text-[#111827]">ട്രാൻസിറ്റ് ഇടനാഴി മാപ്പ് (Transit Map)</h1>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
           <!-- Left: Styled Canvas Map with Black & Red Markers -->
@@ -958,15 +958,15 @@
               
               <!-- Stop 1: Ernakulam South -->
               <circle cx="50" cy="160" r="10" fill="#111827" stroke="#FFFFFF" stroke-width="3"/>
-              <text x="50" y="195" font-size="11" font-weight="900" fill="#111827" text-anchor="middle">Ernakulam South (Board)</text>
+              <text x="50" y="195" font-size="11" font-weight="900" fill="#111827" text-anchor="middle">എറണാകുളം സൗത്ത് (കയറുന്ന സ്ഥലം)</text>
 
               <!-- Stop 2: Kalamassery -->
               <circle cx="250" cy="80" r="8" fill="#111827" stroke="#FFFFFF" stroke-width="3"/>
-              <text x="250" y="65" font-size="10" font-weight="900" fill="#111827" text-anchor="middle">Kalamassery</text>
+              <text x="250" y="65" font-size="10" font-weight="900" fill="#111827" text-anchor="middle">കളമശ്ശേരി</text>
 
               <!-- Stop 3: Aluva -->
               <circle cx="450" cy="140" r="12" fill="#DC2626" stroke="#FACC15" stroke-width="3"/>
-              <text x="450" y="175" font-size="11" font-weight="900" fill="#DC2626" text-anchor="middle">Aluva (Exit here)</text>
+              <text x="450" y="175" font-size="11" font-weight="900" fill="#DC2626" text-anchor="middle">ആലുവ (ഇറങ്ങേണ്ട സ്ഥലം)</text>
             </svg>
           </div>
 
@@ -974,26 +974,26 @@
           <div class="lg:col-span-4 bg-[#FFFBEB] p-4 rounded-2xl border-2 border-[#FDE047] flex flex-col justify-between gap-3">
             <div class="flex flex-col gap-2.5 text-xs">
               <div class="flex justify-between pb-1.5 border-b border-[#E5E7EB]">
-                <span class="text-[#4B5563] font-bold">Total Distance</span>
-                <span class="font-black text-[#111827]">15 km</span>
+                <span class="text-[#4B5563] font-bold">ആകെ ദൂരം</span>
+                <span class="font-black text-[#111827]">15 കി.മീ</span>
               </div>
               <div class="flex justify-between pb-1.5 border-b border-[#E5E7EB]">
-                <span class="text-[#4B5563] font-bold">Estimated Time</span>
-                <span class="font-black text-[#111827]">45 mins</span>
+                <span class="text-[#4B5563] font-bold">യാത്രാ സമയം</span>
+                <span class="font-black text-[#111827]">45 മിനിറ്റ്</span>
               </div>
               <div class="flex justify-between pb-1.5 border-b border-[#E5E7EB]">
-                <span class="text-[#4B5563] font-bold">Fare Stages</span>
+                <span class="text-[#4B5563] font-bold">ഫെയർ സ്റ്റേജുകൾ</span>
                 <span class="font-black text-[#111827]">4</span>
               </div>
               <div class="flex justify-between pb-1.5 border-b border-[#E5E7EB]">
-                <span class="text-[#4B5563] font-bold">Estimated Fare</span>
+                <span class="text-[#4B5563] font-bold">പ്രതീക്ഷിക്കുന്ന നിരക്ക്</span>
                 <span class="font-black text-[#DC2626]">₹ 40</span>
               </div>
             </div>
 
             <a href="#journey" data-nav-target="journey" class="py-3 px-4 rounded-xl bg-[#DC2626] text-white font-black text-xs text-center shadow-btn-red hover:bg-[#B91C1C] active:scale-95 transition-colors flex items-center justify-center gap-1.5">
               <span class="material-symbols-outlined text-[16px]">navigation</span>
-              <span>Start Navigation</span>
+              <span>യാത്ര ആരംഭിക്കുക</span>
             </a>
           </div>
         </div>
@@ -1006,8 +1006,8 @@
     <section id="view-nearby" class="hidden flex flex-col gap-6 max-w-3xl mx-auto w-full">
       <div class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-[#111827] shadow-card-clean flex flex-col gap-5">
         <div>
-          <h1 class="text-2xl font-black text-[#111827]">Nearby Stops</h1>
-          <p class="text-xs text-[#4B5563] font-bold">Closest stops from your location</p>
+          <h1 class="text-2xl font-black text-[#111827]">സമീപത്തുള്ള ബസ് സ്റ്റോപ്പുകൾ</h1>
+          <p class="text-xs text-[#4B5563] font-bold">നിങ്ങളുടെ സ്ഥലത്തിനടുത്തുള്ള ബസ് സ്റ്റോപ്പുകൾ</p>
         </div>
 
         <!-- 3 Nearby Stop Cards -->
