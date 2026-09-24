@@ -735,6 +735,9 @@ class AnavandiApp {
     // Apply persona & accessibility classes to body
     document.body.className = `bg-surface text-on-surface antialiased flex flex-col min-h-screen persona-${persona} ${a11y.largeText ? 'mode-large-text' : ''} ${a11y.highContrast ? 'mode-high-contrast' : ''} ${a11y.reducedMotion ? 'mode-reduced-motion' : ''} ${a11y.largeTargets ? 'mode-large-targets' : ''}`;
 
+    // Translate all static elements with data-i18n attributes
+    this.translateDOM(lang);
+
     // Render Navigation & Global elements
     this.renderTopAppBar(state);
     this.renderBottomNav(state);
@@ -742,14 +745,37 @@ class AnavandiApp {
 
     // Render Views
     this.renderHomeView(state);
+    this.renderPlanView(state);
+    this.renderVoiceView(state);
+    this.renderRoutelensView(state);
     this.renderJourneyView(state);
     this.renderNearbyView(state);
+    this.renderMapView(state);
     this.renderMyJourneyView(state);
     this.renderAccessibilityView(state);
+    this.renderPrivacyView(state);
+    this.renderHelpView(state);
+    this.renderSettingsView(state);
     this.renderAiDrawer(state);
     this.renderDepotView(state);
     this.renderCrewView(state);
     this.renderAdminView(state);
+  }
+
+  translateDOM(lang) {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      if (key) {
+        el.textContent = getTranslation(lang, key);
+      }
+    });
+
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const key = el.dataset.i18nPlaceholder;
+      if (key) {
+        el.placeholder = getTranslation(lang, key);
+      }
+    });
   }
 
   renderTopAppBar(state) {
@@ -1110,6 +1136,87 @@ class AnavandiApp {
     this.setText('role-title-depot', getTranslation(lang, 'roleDepotTitle') || 'Depot Staff');
     this.setText('role-title-crew', getTranslation(lang, 'roleCrewTitle') || 'Crew');
     this.setText('role-title-admin', getTranslation(lang, 'roleAdminTitle') || 'Admin');
+  }
+
+  renderPlanView(state) {
+    const lang = state.currentLanguage;
+    const view = document.getElementById('view-plan');
+    if (!view) return;
+
+    const title = view.querySelector('h1');
+    if (title) title.textContent = getTranslation(lang, 'planTitle');
+
+    const input = document.getElementById('journey-dest-input');
+    if (input) input.placeholder = getTranslation(lang, 'naturalLanguageHint');
+
+    const submitBtn = view.querySelector('button[type="submit"] span:last-child');
+    if (submitBtn) submitBtn.textContent = getTranslation(lang, 'findRouteBtn');
+  }
+
+  renderVoiceView(state) {
+    const lang = state.currentLanguage;
+    const view = document.getElementById('view-voice');
+    if (!view) return;
+
+    const title = view.querySelector('h1');
+    if (title) title.textContent = getTranslation(lang, 'voiceTitle');
+
+    const confirmBtn = document.getElementById('voice-confirm-btn');
+    if (confirmBtn) confirmBtn.textContent = getTranslation(lang, 'confirmVoiceBtn');
+
+    const retryBtn = document.getElementById('voice-retry-btn');
+    if (retryBtn) retryBtn.textContent = getTranslation(lang, 'speakAgainBtn');
+  }
+
+  renderRoutelensView(state) {
+    const lang = state.currentLanguage;
+    const view = document.getElementById('view-routelens');
+    if (!view) return;
+
+    const title = view.querySelector('h1');
+    if (title) title.textContent = getTranslation(lang, 'routelensTitle');
+
+    const sub = view.querySelector('p');
+    if (sub) sub.textContent = getTranslation(lang, 'routelensSub');
+  }
+
+  renderMapView(state) {
+    const lang = state.currentLanguage;
+    const view = document.getElementById('view-map');
+    if (!view) return;
+
+    const title = view.querySelector('h1');
+    if (title) title.textContent = getTranslation(lang, 'mapTitle');
+
+    const sub = view.querySelector('p');
+    if (sub) sub.textContent = getTranslation(lang, 'mapSub');
+  }
+
+  renderPrivacyView(state) {
+    const lang = state.currentLanguage;
+    const view = document.getElementById('view-privacy');
+    if (!view) return;
+
+    const title = view.querySelector('h1');
+    if (title) title.textContent = getTranslation(lang, 'privacyTitle');
+  }
+
+  renderHelpView(state) {
+    const lang = state.currentLanguage;
+    const view = document.getElementById('view-help');
+    if (!view) return;
+
+    const title = view.querySelector('h1');
+    if (title) title.textContent = getTranslation(lang, 'helpTitle');
+  }
+
+  renderSettingsView(state) {
+    const lang = state.currentLanguage;
+    const view = document.getElementById('view-settings');
+    if (!view) return;
+
+    const title = view.querySelector('h1');
+    if (title) title.textContent = getTranslation(lang, 'settingsTitle');
   }
 
   renderJourneyView(state) {
