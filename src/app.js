@@ -1270,10 +1270,32 @@ class AnavandiApp {
     if (visualModeCard) {
       if (j.isVisualMode) {
         visualModeCard.classList.remove('hidden');
-        if (visualModeBtn) visualModeBtn.textContent = 'Audio Mode';
+        if (visualModeBtn) visualModeBtn.textContent = lang === 'ml' ? 'ശബ്ദ മോഡ്' : 'Audio Mode';
       } else {
         visualModeCard.classList.add('hidden');
-        if (visualModeBtn) visualModeBtn.textContent = 'Visual Mode';
+        if (visualModeBtn) visualModeBtn.textContent = lang === 'ml' ? 'വിഷ്വൽ മോഡ്' : 'Visual Mode';
+      }
+    }
+
+    // Dynamic Next Stop & Remaining Distance Live Pill Translation
+    const currentStop = (j.routeStops && j.routeStops[j.currentStopIndex]) || null;
+    const stopName = currentStop ? (currentStop.names[lang] || currentStop.names.ml || currentStop.names.en) : (lang === 'ml' ? 'കളമശ്ശേരി' : 'Kalamassery');
+
+    const nextStopEl = document.getElementById('journey-next-stop-val');
+    if (nextStopEl) {
+      if (lang === 'ml') {
+        nextStopEl.textContent = `${stopName} ${j.nextStopTimerMin} മിനിറ്റിൽ • ${(j.remainingDistanceKm || 6).toFixed(0)} കി.മീ`;
+      } else {
+        nextStopEl.textContent = `${stopName} in ${j.nextStopTimerMin} mins • ${(j.remainingDistanceKm || 6).toFixed(0)} km`;
+      }
+    }
+
+    const remDistEl = document.getElementById('journey-rem-dist-val');
+    if (remDistEl) {
+      if (lang === 'ml') {
+        remDistEl.textContent = `${(j.remainingDistanceKm || 7).toFixed(0)} കി.മീ ~ ${j.nextStopTimerMin + 8} മിനിറ്റ്`;
+      } else {
+        remDistEl.textContent = `${(j.remainingDistanceKm || 7).toFixed(0)} km ~ ${j.nextStopTimerMin + 8} mins`;
       }
     }
 

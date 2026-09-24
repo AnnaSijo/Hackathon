@@ -256,16 +256,16 @@
 
       <!-- Center: Navigation Pill Tabs in Black & Red -->
       <nav class="hidden lg:flex items-center gap-1.5" id="main-desktop-nav">
-        <a href="#home" data-nav-target="home" class="nav-pill-item px-4 py-1.5 rounded-full text-xs font-bold bg-[#111827] text-white shadow-sm transition-all">Home</a>
-        <a href="#plan" data-nav-target="plan" class="nav-pill-item px-3.5 py-1.5 rounded-full text-xs font-bold text-[#111827] hover:bg-[#FEF08A] transition-all">Plan Journey</a>
-        <a href="#routelens" data-nav-target="routelens" class="nav-pill-item px-3.5 py-1.5 rounded-full text-xs font-bold text-[#111827] hover:bg-[#FEF08A] transition-all">Scan Board</a>
-        <a href="#nearby" data-nav-target="nearby" class="nav-pill-item px-3.5 py-1.5 rounded-full text-xs font-bold text-[#111827] hover:bg-[#FEF08A] transition-all">Nearby Stops</a>
-        <a href="#journey" data-nav-target="journey" class="nav-pill-item px-3.5 py-1.5 rounded-full text-xs font-bold text-[#111827] hover:bg-[#FEF08A] transition-all">My Journey</a>
+        <a href="#home" data-nav-target="home" class="nav-pill-item px-4 py-1.5 rounded-full text-xs font-bold bg-[#111827] text-white shadow-sm transition-all">ഹോം</a>
+        <a href="#plan" data-nav-target="plan" class="nav-pill-item px-3.5 py-1.5 rounded-full text-xs font-bold text-[#111827] hover:bg-[#FEF08A] transition-all">യാത്രാ ആസൂത്രണം</a>
+        <a href="#routelens" data-nav-target="routelens" class="nav-pill-item px-3.5 py-1.5 rounded-full text-xs font-bold text-[#111827] hover:bg-[#FEF08A] transition-all">ബോർഡ് സ്കാൻ</a>
+        <a href="#nearby" data-nav-target="nearby" class="nav-pill-item px-3.5 py-1.5 rounded-full text-xs font-bold text-[#111827] hover:bg-[#FEF08A] transition-all">സമീപ സ്റ്റോപ്പുകൾ</a>
+        <a href="#journey" data-nav-target="journey" class="nav-pill-item px-3.5 py-1.5 rounded-full text-xs font-bold text-[#111827] hover:bg-[#FEF08A] transition-all">എന്റെ യാത്ര</a>
         <button type="button" class="nav-pill-item flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-black text-white bg-[#DC2626] hover:bg-[#B91C1C] shadow-btn-red transition-all cursor-pointer" onclick="window.anavandiApp.openAiAssistant()" title="Ask Aanavandi AI">
           <span class="material-symbols-outlined text-[15px]">smart_toy</span>
-          <span>AI Assistant</span>
+          <span>എഐ സഹായി</span>
         </button>
-        <a href="#help" data-nav-target="help" class="nav-pill-item px-3 py-1.5 rounded-full text-xs font-bold text-[#111827] hover:bg-[#FEF08A] transition-all">Help</a>
+        <a href="#help" data-nav-target="help" class="nav-pill-item px-3 py-1.5 rounded-full text-xs font-bold text-[#111827] hover:bg-[#FEF08A] transition-all">സഹായം</a>
       </nav>
 
       <!-- Right Controls: Change Traveler Type, Language, Online Status -->
@@ -273,7 +273,7 @@
         <!-- API Key Status Button -->
         <button id="header-api-btn" type="button" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FFFBEB] hover:bg-[#FEF08A] text-xs font-black text-[#111827] border border-[#111827] shadow-sm transition-all cursor-pointer" onclick="window.anavandiApp.openApiKeyModal()" title="Configure AI Model & API Key">
           <span class="material-symbols-outlined text-[16px] text-[#DC2626]">settings_suggest</span>
-          <span id="header-api-model-label">Gemini AI</span>
+          <span id="header-api-model-label">ജെമിനി എഐ</span>
         </button>
 
         <!-- Language Selector Dropdown -->
@@ -309,7 +309,7 @@
         <!-- Online Badge -->
         <button id="network-badge" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#DC2626] text-white text-xs font-black shadow-sm cursor-pointer hover:opacity-90" title="Click to cycle: Online ➔ Weak ➔ Offline">
           <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
-          <span id="network-status-text">Online</span>
+          <span id="network-status-text">ഓൺലൈൻ</span>
         </button>
       </div>
     </div>
@@ -826,11 +826,11 @@
         <!-- Header Route Title in Black and Red -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h1 class="text-2xl font-black text-[#111827]">Your Journey</h1>
+            <h1 class="text-2xl font-black text-[#111827]">നിങ്ങളുടെ യാത്ര (Your Journey)</h1>
             <div class="flex items-center gap-2 text-xs font-bold text-[#4B5563] mt-0.5">
-              <span>From <strong class="text-[#111827]">Ernakulam South</strong></span>
+              <span>പുറപ്പെടുന്നത്: <strong class="text-[#111827]">എറണാകുളം സൗത്ത്</strong></span>
               <span class="material-symbols-outlined text-[16px] text-[#DC2626]">arrow_forward</span>
-              <span>To <strong class="text-[#DC2626]">Aluva</strong></span>
+              <span>ലക്ഷ്യസ്ഥാനം: <strong class="text-[#DC2626]">ആലുവ</strong></span>
             </div>
           </div>
         </div>
@@ -838,20 +838,20 @@
         <!-- 4 Stat Badges Grid in Light Yellow/Black/Red -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
           <div class="p-3.5 rounded-2xl bg-[#FFFBEB] border-2 border-[#FDE047] flex flex-col items-center">
-            <span class="text-[10px] font-black text-[#4B5563] uppercase">Distance</span>
-            <span class="text-base font-black text-[#111827] mt-0.5">15 km</span>
+            <span class="text-[10px] font-black text-[#4B5563] uppercase">ആകെ ദൂരം (Distance)</span>
+            <span class="text-base font-black text-[#111827] mt-0.5">15 കി.മീ</span>
           </div>
           <div class="p-3.5 rounded-2xl bg-[#FFFBEB] border-2 border-[#FDE047] flex flex-col items-center">
-            <span class="text-[10px] font-black text-[#4B5563] uppercase">Journey Time</span>
-            <span class="text-base font-black text-[#111827] mt-0.5">~ 45 mins</span>
+            <span class="text-[10px] font-black text-[#4B5563] uppercase">യാത്രാ സമയം (Time)</span>
+            <span class="text-base font-black text-[#111827] mt-0.5">~ 45 മിനിറ്റ്</span>
           </div>
           <div class="p-3.5 rounded-2xl bg-[#FFFBEB] border-2 border-[#FDE047] flex flex-col items-center">
-            <span class="text-[10px] font-black text-[#4B5563] uppercase">Fare Stages</span>
+            <span class="text-[10px] font-black text-[#4B5563] uppercase">ഫെയർ സ്റ്റേജുകൾ</span>
             <span class="text-base font-black text-[#111827] mt-0.5">4</span>
           </div>
           <div class="p-3.5 rounded-2xl bg-[#FFFBEB] border-2 border-[#FDE047] flex flex-col items-center">
-            <span class="text-[10px] font-black text-[#4B5563] uppercase">Estimated Fare</span>
-            <span class="text-base font-black text-[#DC2626] mt-0.5">₹ 40 <span class="text-[10px] font-bold text-[#4B5563]">(est.)</span></span>
+            <span class="text-[10px] font-black text-[#4B5563] uppercase">പ്രതീക്ഷിക്കുന്ന നിരക്ക്</span>
+            <span class="text-base font-black text-[#DC2626] mt-0.5">₹ 40 <span class="text-[10px] font-bold text-[#4B5563]">(കണക്ക്)</span></span>
           </div>
         </div>
 
@@ -859,19 +859,19 @@
         <div class="flex items-center gap-1.5 p-1.5 bg-[#F3F4F6] rounded-full overflow-x-auto border border-[#E5E7EB]">
           <button type="button" class="flex-1 py-2 px-3.5 rounded-full bg-[#111827] text-white font-bold text-xs shadow-sm text-center flex items-center justify-center gap-1.5">
             <span class="material-symbols-outlined text-[16px]">timeline</span>
-            <span>Visual Journey</span>
+            <span>വിഷ്വൽ ട്രാക്കിംഗ്</span>
           </button>
           <a href="#map" data-nav-target="map" class="flex-1 py-2 px-3.5 rounded-full text-[#111827] hover:bg-[#FEF08A] font-bold text-xs text-center flex items-center justify-center gap-1.5 transition-colors">
             <span class="material-symbols-outlined text-[16px]">map</span>
-            <span>Map</span>
+            <span>മാപ്പ് (Map)</span>
           </a>
           <button type="button" class="flex-1 py-2 px-3.5 rounded-full text-[#111827] hover:bg-[#FEF08A] font-bold text-xs text-center flex items-center justify-center gap-1.5 transition-colors" onclick="document.getElementById('journey-stops-timeline-block').scrollIntoView({behavior:'smooth'})">
             <span class="material-symbols-outlined text-[16px]">format_list_bulleted</span>
-            <span>Stops</span>
+            <span>സ്റ്റോപ്പുകൾ (Stops)</span>
           </button>
           <a href="#help" data-nav-target="help" class="flex-1 py-2 px-3.5 rounded-full text-[#111827] hover:bg-[#FEF08A] font-bold text-xs text-center flex items-center justify-center gap-1.5 transition-colors">
             <span class="material-symbols-outlined text-[16px]">info</span>
-            <span>Details</span>
+            <span>വിശദാംശങ്ങൾ</span>
           </a>
         </div>
 
@@ -881,10 +881,10 @@
           <div class="flex justify-between items-center text-xs font-black text-[#111827]">
             <div class="flex items-center gap-1.5">
               <span class="w-3.5 h-3.5 rounded-full bg-[#111827]"></span>
-              <span>Ernakulam South (Board)</span>
+              <span>എറണാകുളം സൗത്ത് (കയറുന്ന സ്ഥലം)</span>
             </div>
             <div class="flex items-center gap-1.5">
-              <span>Aluva (Destination)</span>
+              <span>ആലുവ (ലക്ഷ്യസ്ഥാനം)</span>
               <span class="w-3.5 h-3.5 rounded-full bg-[#DC2626]"></span>
             </div>
           </div>
@@ -907,13 +907,13 @@
             <div class="flex items-center gap-2">
               <span class="material-symbols-outlined text-[#DC2626] text-[22px]">directions_bus</span>
               <div class="flex flex-col">
-                <span class="text-[10px] text-[#4B5563] font-bold">Next Stop</span>
-                <span class="font-black text-[#111827]">Kalamassery in 12 mins • 6 km</span>
+                <span class="text-[10px] text-[#4B5563] font-bold">അടുത്ത സ്റ്റോപ്പ്</span>
+                <span id="journey-next-stop-val" class="font-black text-[#111827]">കളമശ്ശേരി 12 മിനിറ്റിൽ • 6 കി.മീ</span>
               </div>
             </div>
             <div class="text-right">
-              <span class="text-[10px] text-[#4B5563] font-bold">Remaining Distance</span>
-              <span class="font-black text-[#DC2626] block text-sm">7 km ~ 20 mins</span>
+              <span class="text-[10px] text-[#4B5563] font-bold">ബാക്കിയുള്ള ദൂരം</span>
+              <span id="journey-rem-dist-val" class="font-black text-[#DC2626] block text-sm">7 കി.മീ ~ 20 മിനിറ്റ്</span>
             </div>
           </div>
         </div>
@@ -922,15 +922,15 @@
         <div class="grid grid-cols-3 gap-3 pt-2">
           <button id="voice-repeat-announcement-btn" type="button" class="py-3 px-3 rounded-xl bg-[#F3F4F6] hover:bg-[#FEF08A] border border-[#111827] text-xs font-black text-[#111827] flex items-center justify-center gap-1.5 active:scale-95 transition-colors">
             <span class="material-symbols-outlined text-[16px]">volume_up</span>
-            <span>Audio Guidance</span>
+            <span>ശബ്ദ സഹായം</span>
           </button>
           <button id="journey-visual-mode-toggle" type="button" class="py-3 px-3 rounded-xl bg-[#F3F4F6] hover:bg-[#FEF08A] border border-[#111827] text-xs font-black text-[#111827] flex items-center justify-center gap-1.5 active:scale-95 transition-colors">
             <span class="material-symbols-outlined text-[16px]">visibility</span>
-            <span>Visual Mode</span>
+            <span id="visual-mode-btn-text">വിഷ്വൽ മോഡ്</span>
           </button>
-          <button type="button" class="py-3 px-3 rounded-xl bg-[#F3F4F6] hover:bg-[#FEF08A] border border-[#111827] text-xs font-black text-[#111827] flex items-center justify-center gap-1.5 active:scale-95 transition-colors" onclick="navigator.clipboard && navigator.clipboard.writeText(window.location.href); alert('Journey link copied to clipboard!');">
+          <button type="button" class="py-3 px-3 rounded-xl bg-[#F3F4F6] hover:bg-[#FEF08A] border border-[#111827] text-xs font-black text-[#111827] flex items-center justify-center gap-1.5 active:scale-95 transition-colors" onclick="navigator.clipboard && navigator.clipboard.writeText(window.location.href); alert('യാത്രാ വിവരങ്ങൾ കോപ്പി ചെയ്തു!');">
             <span class="material-symbols-outlined text-[16px]">share</span>
-            <span>Share Journey</span>
+            <span>യാത്ര പങ്കിടുക</span>
           </button>
         </div>
 
