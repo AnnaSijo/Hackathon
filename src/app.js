@@ -824,13 +824,13 @@ class AnavandiApp {
     if (personaIcon && personaLabel) {
       if (state.currentPersona === 'child') {
         personaIcon.textContent = '👦';
-        personaLabel.textContent = 'Child Mode';
+        personaLabel.textContent = lang === 'ml' ? 'കുട്ടികളുടെ മോഡ്' : (lang === 'hi' ? 'बच्चों का मोड' : (lang === 'ta' ? 'குழந்தைகள் முறை' : (lang === 'kn' ? 'ಮಕ್ಕಳ ಮೋಡ್' : 'Child Mode')));
       } else if (state.currentPersona === 'senior') {
         personaIcon.textContent = '👴';
-        personaLabel.textContent = 'Senior Mode';
+        personaLabel.textContent = lang === 'ml' ? 'മുതിർന്നവരുടെ മോഡ്' : (lang === 'hi' ? 'वरिष्ठ मोड' : (lang === 'ta' ? 'முதியோர் முறை' : (lang === 'kn' ? 'ಹಿರಿಯರ ಮೋಡ್' : 'Senior Mode')));
       } else {
         personaIcon.textContent = '👨';
-        personaLabel.textContent = 'Adult Mode';
+        personaLabel.textContent = lang === 'ml' ? 'സാധാരണ മോഡ്' : (lang === 'hi' ? 'सामान्य मोड' : (lang === 'ta' ? 'இயல்பான முறை' : (lang === 'kn' ? 'ಸಾಮಾನ್ಯ ಮೋಡ್' : 'Adult Mode')));
       }
     }
 
@@ -840,7 +840,7 @@ class AnavandiApp {
       const activeModel = geminiService.getModel();
       const hasKey = geminiService.hasApiKey();
       if (activeModel === 'local-deterministic' || !hasKey) {
-        headerApiModelLabel.textContent = '⚡ Local AI';
+        headerApiModelLabel.textContent = lang === 'ml' ? '⚡ ലോക്കൽ എഐ' : '⚡ Local AI';
       } else if (activeModel === 'gemini-1.5-flash') {
         headerApiModelLabel.textContent = '🤖 Gemini 1.5 Flash';
       } else if (activeModel === 'gemini-2.0-flash') {
@@ -848,7 +848,7 @@ class AnavandiApp {
       } else if (activeModel === 'gemini-1.5-pro') {
         headerApiModelLabel.textContent = '🧠 Gemini Pro';
       } else {
-        headerApiModelLabel.textContent = '🤖 Gemini AI';
+        headerApiModelLabel.textContent = lang === 'ml' ? '🤖 ജെമിനി എഐ' : '🤖 Gemini AI';
       }
     }
 
